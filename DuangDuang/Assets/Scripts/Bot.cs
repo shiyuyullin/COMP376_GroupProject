@@ -33,8 +33,6 @@ public class Bot : MonoBehaviour
         {
             navMeshAgent.SetDestination(searchResults.allHitObjectsWithRequiredTag[0].transform.position);
         }
-        
-        
     }
 
 
