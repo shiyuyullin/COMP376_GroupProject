@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CarController : MonoBehaviour
 {
@@ -9,36 +10,65 @@ public class CarController : MonoBehaviour
     [SerializeField] float mAngularSpeed;
 
     //bumper
-    [SerializeField] float mForce;
+    [SerializeField] float forceMagnitude;
+    [SerializeField] float recoil;
     [SerializeField] float mBumperForce;
     [SerializeField] float mForceRadius;
 
-    void Start()
-    {
-        mSpeed = 10f;
-        mAngularSpeed = 100f;
-    }
+    private float horizontal;
+    private float vertical;
+    private bool wPressed;
+    private bool sPressed;
 
     void Update()
     {
+        if(Input.GetKey(KeyCode.W))
+        {
+            wPressed = true;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            sPressed = true;
+        }
         Move();
     }
 
-    //private void OnCollisionEnter(Collision collisionInfo)
-    //{
-    //    if (collisionInfo.collider.CompareTag("Dirt"))
-    //        Destroy(collisionInfo.collider.gameObject);
-    //    if (collisionInfo.collider.CompareTag("Player"))
-    //        collisionInfo.collider.attachedRigidbody.AddForce(mForce * Vector3.forward, ForceMode.Impulse);
-    //    //collisionInfo.rigidbody.AddExplosionForce(mBumperForce, transform.position, mForceRadius, 0.0f, ForceMode.Impulse);
-    //}
+    //Using fixed updated to get a smooth movement
+    void FixedUpdate()
+    {
+        if(wPressed)
+        {
+            gameObject.GetComponent<Rigidbody>().velocity = -transform.right  * mSpeed;
+            wPressed = false;
+        }
+        if (sPressed)
+        {
+            gameObject.GetComponent<Rigidbody>().velocity = transform.right * mSpeed;
+            sPressed = false;
+        }
+        transform.Rotate(0, horizontal * mAngularSpeed, 0);
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
+
+        if(collision.gameObject.tag == "Player")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+        }
+
+    }
 
     void Move()
     {
-        float horizontal = Input.GetAxis("Horizontal") * mAngularSpeed * Time.deltaTime;
-        float vertical = Input.GetAxis("Vertical") * mSpeed * Time.deltaTime;
-
-        transform.Translate(vertical, 0, 0);
-        transform.Rotate(0, horizontal, 0);
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
+        //transform.Translate(vertical, 0, 0);
+        //transform.Rotate(0, horizontal, 0);
     }
+
 }
