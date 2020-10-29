@@ -7,12 +7,12 @@ public class FollowCamer : MonoBehaviour
     public Vector3 distance;
     public Transform targetLocation;
 
-    void FixedUpdate()
-    {
-        transform.position = Vector3.Lerp(transform.position, cameraLocation.position + distance, speed * Time.deltaTime);
-        transform.LookAt(targetLocation.position);
+    // void FixedUpdate()
+    // {
+    //     transform.position = Vector3.Lerp(transform.position, cameraLocation.position + distance, speed * Time.deltaTime);
+    //     transform.LookAt(targetLocation.position);
 
         
-    }
+    // }
 
 }

@@ -33,16 +33,16 @@ public class SearchForTarget : IState
         var allObjectsWithRequiredTags = new List<Collider>();
         for (int i = 0; i < hitObjects.Length; i++)
         {
-           if (hitObjects[i].CompareTag(tagToLookFor))
+           if (hitObjects[i].CompareTag(tagToLookFor)&&hitObjects[i].gameObject!=ownerGameObject&&hitObjects[i].gameObject!=null)
            {
-               //navMeshAgent.SetDestination(hitObjects[i].transform.position);
+               
                allObjectsWithRequiredTags.Add(hitObjects[i]);
            }
         }
            
-        var searchresult = new SearchResults(hitObjects, allObjectsWithRequiredTags);
-        //Sending the result to Bot.cs
-        this.searchResultsCallBack(searchresult);
+        
+        
+        this.searchResultsCallBack(new SearchResults(hitObjects, allObjectsWithRequiredTags));
             
         
         

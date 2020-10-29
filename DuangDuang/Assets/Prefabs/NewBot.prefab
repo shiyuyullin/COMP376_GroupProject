@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4818305096814798098}
   - component: {fileID: 4818305096814798096}
   - component: {fileID: 4818305096814798097}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 4818305096917335347}
   - component: {fileID: 4818305096917335345}
   - component: {fileID: 4818305096917335346}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sphere.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 4818305097499480548}
   - component: {fileID: 4818305097499480546}
   - component: {fileID: 4818305097499480547}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -252,7 +252,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4818305097513614405}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Camer Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 4818305097592429879}
   - component: {fileID: 4818305097592429877}
   - component: {fileID: 4818305097592429878}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,7 +365,7 @@ GameObject:
   - component: {fileID: 4818305097981363623}
   - component: {fileID: 4818305097981363621}
   - component: {fileID: 4818305097981363622}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -448,9 +448,9 @@ GameObject:
   - component: {fileID: 4818305098041734811}
   - component: {fileID: 4818305098041734812}
   - component: {fileID: 4818305098041734813}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: NewBot
-  m_TagString: Bot
+  m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -549,9 +549,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   viewrange: 1000
-  tagToLookFor: Player
+  tagToLookFor: Target
   forceMagnitude: 15
   recoil: 5
+  chaseTarget: {fileID: 0}
+  state: 
+  chaseYouGameObject: []
 --- !u!1 &4818305098477435133
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,7 +566,7 @@ GameObject:
   - component: {fileID: 4818305098477435132}
   - component: {fileID: 4818305098477435130}
   - component: {fileID: 4818305098477435131}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -644,7 +647,7 @@ GameObject:
   - component: {fileID: 4818305098553559530}
   - component: {fileID: 4818305098553559528}
   - component: {fileID: 4818305098553559529}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -725,7 +728,7 @@ GameObject:
   - component: {fileID: 4818305098588109229}
   - component: {fileID: 4818305098588109227}
   - component: {fileID: 4818305098588109228}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -806,7 +809,7 @@ GameObject:
   - component: {fileID: 4818305098636667344}
   - component: {fileID: 4818305098636667358}
   - component: {fileID: 4818305098636667359}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -885,7 +888,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4818305098637648955}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Camer Location
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -917,7 +920,7 @@ GameObject:
   - component: {fileID: 4818305098833035612}
   - component: {fileID: 4818305098833035610}
   - component: {fileID: 4818305098833035611}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Torus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -998,7 +1001,7 @@ GameObject:
   - component: {fileID: 4818305098901713823}
   - component: {fileID: 4818305098901713821}
   - component: {fileID: 4818305098901713822}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube.008
   m_TagString: Untagged
   m_Icon: {fileID: 0}

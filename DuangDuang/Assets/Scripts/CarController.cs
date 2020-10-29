@@ -35,6 +35,20 @@ public class CarController : MonoBehaviour
     //Using fixed updated to get a smooth movement
     void FixedUpdate()
     {
+        //if go off of plane change tag and notice the bots that is chasing him
+        if(transform.position.y<0||transform.position.x<0||transform.position.x>50||transform.position.z<0||transform.position.z>50){
+            GameObject [] temp = GameObject.FindGameObjectsWithTag("Target");
+            for(int i=0; i<temp.Length;i++){
+                if(temp[i].name=="Bumper Car"){
+                    continue;
+                }
+                temp[i].GetComponent<Bot>().chaseYouGameObject.Remove(gameObject);
+                if(temp[i].GetComponent<Bot>().chaseTarget==gameObject){
+                    temp[i].GetComponent<Bot>().chaseTarget=null;
+                }
+            
+            }
+        }
         if(wPressed)
         {
             gameObject.GetComponent<Rigidbody>().velocity = -transform.right  * mSpeed;
