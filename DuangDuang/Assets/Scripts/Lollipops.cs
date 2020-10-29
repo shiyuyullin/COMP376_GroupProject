@@ -58,6 +58,7 @@ public class Lollipops : MonoBehaviour
             Vector3 playerPosition = new Vector3(collision.gameObject.transform.position.x, 0, collision.gameObject.transform.position.z);
             Vector3 forceDirection = playerPosition - collisonPosition;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * 5f, ForceMode.Impulse);
+            collision.gameObject.GetComponent<CarController>().setIsInMotionOfForce(true);
             //collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(25f, lollipopCenter.position, 25f, 0, ForceMode.Impulse);
         }
     }

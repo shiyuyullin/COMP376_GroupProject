@@ -13,15 +13,16 @@ public class CarController : MonoBehaviour
     [SerializeField] float forceMagnitude;
     [SerializeField] float recoil;
 
-
     private float horizontal;
     private float vertical;
     private bool wPressed;
     private bool sPressed;
 
+    private bool InMotionOfForce;
+
     void Update()
     {
-        if(Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W))
         {
             wPressed = true;
         }
@@ -29,49 +30,47 @@ public class CarController : MonoBehaviour
         {
             sPressed = true;
         }
+        if (InMotionOfForce)
+        {
+            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude <= 0.5)
+            {
+                InMotionOfForce = false;
+            }
+        }
         Move();
+
     }
 
     //Using fixed updated to get a smooth movement
     void FixedUpdate()
     {
-        //if go off of plane change tag and notice the bots that is chasing him
-        if(transform.position.y<0||transform.position.x<0||transform.position.x>50||transform.position.z<0||transform.position.z>50){
-            GameObject [] temp = GameObject.FindGameObjectsWithTag("Target");
-            for(int i=0; i<temp.Length;i++){
-                if(temp[i].name=="Bumper Car"){
-                    continue;
-                }
-                temp[i].GetComponent<Bot>().chaseYouGameObject.Remove(gameObject);
-                if(temp[i].GetComponent<Bot>().chaseTarget==gameObject){
-                    temp[i].GetComponent<Bot>().chaseTarget=null;
-                }
-            
-            }
-        }
-        if(wPressed)
+        if (!InMotionOfForce)
         {
-            gameObject.GetComponent<Rigidbody>().velocity = -transform.right  * mSpeed;
-            wPressed = false;
-        }
-        if (sPressed)
-        {
-            gameObject.GetComponent<Rigidbody>().velocity = transform.right * mSpeed;
-            sPressed = false;
-        }
-        transform.Rotate(0, horizontal * mAngularSpeed, 0);
+            if (wPressed)
+            {
+                gameObject.GetComponent<Rigidbody>().velocity = -transform.right * mSpeed;
 
+                wPressed = false;
+            }
+            if (sPressed)
+            {
+                gameObject.GetComponent<Rigidbody>().velocity = transform.right * mSpeed;
+                sPressed = false;
+            }
+            transform.Rotate(0, horizontal * mAngularSpeed, 0);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
 
-        if(collision.gameObject.tag == "Player" || collision.gameObject.tag == "Bot")
+        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Bot")
         {
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
         }
 
     }
@@ -84,4 +83,13 @@ public class CarController : MonoBehaviour
         //transform.Rotate(0, horizontal, 0);
     }
 
+    public void setIsInMotionOfForce(bool temp)
+    {
+        this.InMotionOfForce = temp;
+    }
+
+    public bool getIsInMotionOfForce()
+    {
+        return InMotionOfForce;
+    }
 }

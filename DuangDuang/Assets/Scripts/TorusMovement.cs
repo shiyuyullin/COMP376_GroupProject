@@ -51,6 +51,7 @@ public class TorusMovement : MonoBehaviour
         {
             Debug.Log("collision Player");
             collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(15f, transform.position, 15f, 0, ForceMode.Impulse);
+            collision.gameObject.GetComponent<CarController>().setIsInMotionOfForce(true);
         }
     }
 }

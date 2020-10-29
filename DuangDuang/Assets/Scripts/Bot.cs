@@ -20,9 +20,10 @@ public class Bot : MonoBehaviour
     [SerializeField] public List<GameObject> chaseYouGameObject;
     [SerializeField] private float timer;
     [SerializeField] private float collisonTime;
-   
-    private void Start()
 
+    private bool InMotionOfForce;
+    
+    private void Start()
     {
 
         chaseYouGameObject = new List<GameObject>();
@@ -32,9 +33,7 @@ public class Bot : MonoBehaviour
         chaseTarget=null;
         //the default state is to chase item
         this.stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
-        state="chase";
-        
-        
+        state = "chase";      
     }
 
     private void Update()
@@ -42,7 +41,7 @@ public class Bot : MonoBehaviour
         //if the bot is off the edge
         if(transform.position.y<-10||transform.position.x<0||transform.position.x>50||transform.position.z<0||transform.position.z>50){
             gameObject.tag="Untagged";
-            GameObject [] temp = GameObject.FindGameObjectsWithTag("Target");
+            GameObject [] temp = GameObject.FindGameObjectsWithTag("Player");
             for(int i=0; i<temp.Length;i++){
                 if(temp[i].name=="Bumper Car"){
                     continue;
@@ -60,18 +59,29 @@ public class Bot : MonoBehaviour
             return;
         }
         //re enable navMeshAgent after 2 sec collision
-        if(navMeshAgent.enabled==false){
-            collisonTime+=Time.deltaTime;
-            if(collisonTime>=2){
-            navMeshAgent.enabled=true;
-            collisonTime=-1;
+        if (navMeshAgent.enabled == false)
+        {
+            collisonTime += Time.deltaTime;
+            if (collisonTime >= 2)
+            {
+                navMeshAgent.enabled = true;
+                collisonTime = -1;
             }
-            else{
+            else
+            {
                 return;
             }
         }
-        
-       //execuate state
+
+        if (InMotionOfForce)
+        {
+            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude <= 0.5)
+            {
+                InMotionOfForce = false;
+            }
+        }
+
+        //execuate state
         this.stateMachine.execuateStateUpdate();
         
     }
@@ -101,17 +111,22 @@ public class Bot : MonoBehaviour
         // change chase target every 5 sec
         else if(timer>=5){
             timer =0;
-            if(chaseTarget.name!="Bumper Car"&&chaseTarget!=null){
-            // notice chase target that i am not chasing anymore you
-            chaseTarget.GetComponent<Bot>().chaseYouGameObject.Remove(this.gameObject);}
+            if(chaseTarget.name!="Bumper Car"&&chaseTarget!=null)
+            {
+                // notice chase target that i am not chasing anymore you
+                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Remove(this.gameObject);
+            }
             int chaseIndex =Random.Range(0,searchResults.allHitObjectsWithRequiredTag.Count);
             chaseTarget=searchResults.allHitObjectsWithRequiredTag[chaseIndex].gameObject;
-            if(chaseTarget.name!="Bumper Car"&&chaseTarget!=null){
-            // notice chase target that i am chase you
-            chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);}
+            if(chaseTarget.name!="Bumper Car"&&chaseTarget!=null)
+            {
+                // notice chase target that i am chase you
+                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
+            }
             
         }
-        if(chaseTarget!=null){
+        if(chaseTarget!=null)
+        {
             navMeshAgent.SetDestination(chaseTarget.transform.position);
         }
        
@@ -156,16 +171,24 @@ public class Bot : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
 
-        if(collision.collider.CompareTag("Target"))
+        if(collision.collider.CompareTag("Player"))
         {
             GetComponent<NavMeshAgent>().enabled = false;
             collisonTime=0;
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
         }
     }
+    public void setIsInMotionOfForce(bool temp)
+    {
+        this.InMotionOfForce = temp;
+    }
 
-
+    public bool getIsInMotionOfForce()
+    {
+        return InMotionOfForce;
+    }
 
 }
