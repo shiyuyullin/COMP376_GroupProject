@@ -12,8 +12,7 @@ public class CarController : MonoBehaviour
     //bumper
     [SerializeField] float forceMagnitude;
     [SerializeField] float recoil;
-    [SerializeField] float mBumperForce;
-    [SerializeField] float mForceRadius;
+
 
     private float horizontal;
     private float vertical;
@@ -54,7 +53,7 @@ public class CarController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
 
-        if(collision.gameObject.tag == "Player")
+        if(collision.gameObject.tag == "Player" || collision.gameObject.tag == "Bot")
         {
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
