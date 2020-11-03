@@ -51,14 +51,20 @@ public class Lollipops : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "TeamA" || collision.gameObject.tag == "TeamB")
         {
-            Debug.Log("collision Player");
             Vector3 collisonPosition = new Vector3(transform.position.x, 0, transform.position.z);
             Vector3 playerPosition = new Vector3(collision.gameObject.transform.position.x, 0, collision.gameObject.transform.position.z);
             Vector3 forceDirection = playerPosition - collisonPosition;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * 5f, ForceMode.Impulse);
-            collision.gameObject.GetComponent<CarController>().setIsInMotionOfForce(true);
+            if(collision.gameObject.GetComponent<CarController>() != null)
+            {
+                collision.gameObject.GetComponent<CarController>().setIsInMotionOfForce(true);
+            }
+            else if(collision.gameObject.GetComponent<Bot>() != null)
+            {
+                collision.gameObject.GetComponent<Bot>().setIsInMotionOfForce(true);
+            }
             //collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(25f, lollipopCenter.position, 25f, 0, ForceMode.Impulse);
         }
     }

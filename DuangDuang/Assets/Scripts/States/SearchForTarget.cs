@@ -33,9 +33,8 @@ public class SearchForTarget : IState
         var allObjectsWithRequiredTags = new List<Collider>();
         for (int i = 0; i < hitObjects.Length; i++)
         {
-           if (hitObjects[i].CompareTag(tagToLookFor)&&hitObjects[i].gameObject!=ownerGameObject&&hitObjects[i].gameObject!=null)
+           if (hitObjects[i].CompareTag(tagToLookFor) && hitObjects[i].gameObject!= ownerGameObject && hitObjects[i].gameObject!=null)
            {
-               
                allObjectsWithRequiredTags.Add(hitObjects[i]);
            }
         }

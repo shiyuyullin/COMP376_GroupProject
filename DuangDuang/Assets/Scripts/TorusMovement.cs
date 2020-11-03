@@ -43,15 +43,22 @@ public class TorusMovement : MonoBehaviour
         //    torus.velocity = transform.right * speed;
         //    timer -= cycle;
         //}
+
     }
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "TeamA" || collision.gameObject.tag == "TeamB")
         {
-            Debug.Log("collision Player");
             collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(15f, transform.position, 15f, 0, ForceMode.Impulse);
-            collision.gameObject.GetComponent<CarController>().setIsInMotionOfForce(true);
+            if (collision.gameObject.GetComponent<CarController>() != null)
+            {
+                collision.gameObject.GetComponent<CarController>().setIsInMotionOfForce(true);
+            }
+            else if (collision.gameObject.GetComponent<Bot>() != null)
+            {
+                collision.gameObject.GetComponent<Bot>().setIsInMotionOfForce(true);
+            }
         }
     }
 }

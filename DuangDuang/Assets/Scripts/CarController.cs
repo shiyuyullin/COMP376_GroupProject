@@ -30,9 +30,10 @@ public class CarController : MonoBehaviour
         {
             sPressed = true;
         }
+        
         if (InMotionOfForce)
         {
-            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude <= 0.5)
+            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude <= 0.1)
             {
                 InMotionOfForce = false;
             }
@@ -65,15 +66,15 @@ public class CarController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
 
-        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Bot")
+        if (collision.gameObject.tag == "TeamA" || collision.gameObject.tag == "TeamB")
         {
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
             this.InMotionOfForce = true;
         }
-
     }
+
 
     void Move()
     {
