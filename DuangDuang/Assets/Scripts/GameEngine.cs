@@ -27,7 +27,7 @@ public class GameEngine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Time.realtimeSinceStartup >= 6)
+        if(Time.realtimeSinceStartup >= 5)
         {
             Time.timeScale = 1;
         }
