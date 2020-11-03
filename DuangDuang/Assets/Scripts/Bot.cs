@@ -17,11 +17,14 @@ public class Bot : MonoBehaviour
     //just to see in the unity
     [SerializeField] private string state;
     private NavMeshAgent navMeshAgent;
+    //The bots that is currently chasing me
     [SerializeField] public List<GameObject> chaseYouGameObject;
     [SerializeField] private float timer;
     [SerializeField] private float collisonTime;
-
+    // Detecting if the object is hitted and is in motion caused by force, if yes, it should not allow to move, if no, it can move
     private bool InMotionOfForce;
+    //This is just use for keeping a time, such that after x second the navMeshAgent is re-enabled.
+    private float edgeDetectTimer;
 
     private void Start()
     {
@@ -77,16 +80,28 @@ public class Bot : MonoBehaviour
         //        return;
         //    }
         //}
+        
+        // if the navMeshAgent is disabled, which can only be disabled by BotFallDetect.cs
+        if(this.navMeshAgent.enabled == false)
+        {
+            float previousYComponent = this.transform.position.y;
+            edgeDetectTimer += Time.deltaTime;
+            if(timer >= 3.0)
+            {
+                this.navMeshAgent.enabled = true;
+                edgeDetectTimer = 0.0f;
+            }
+        }
 
         if (InMotionOfForce)
         {
-            if (gameObject.GetComponent<NavMeshAgent>().velocity.magnitude <= 0.2)
+            if (this.navMeshAgent.velocity.magnitude <= 0.2)
             {
                 InMotionOfForce = false;
             }
         }
 
-        if (chaseTarget != null)
+        if (chaseTarget != null && this.navMeshAgent.enabled != false) 
         {
             navMeshAgent.SetDestination(chaseTarget.transform.position);
         }
