@@ -1,4 +1,6 @@
 # COMP376_GroupProject
+p2 link
+https://docs.google.com/presentation/d/1AkBmEfbH2g12ywS0X8aYYFdhuJCw5mSOsDzzqlK03ww/edit?usp=sharing
 
 PPT link
 https://docs.google.com/presentation/d/1vbnACwqLALQDNomf1oV-C_aHDKPvpe4a851VVboVLGg/edit?usp=sharing
