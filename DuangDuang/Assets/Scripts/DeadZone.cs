@@ -23,6 +23,6 @@ public class DeadZone : MonoBehaviour
     public IEnumerator BackToGame(GameObject obj)
     {
         yield return new WaitForSeconds(1f);
-        obj.transform.position = new Vector3(0, 0, 0);
+        obj.transform.position = new Vector3(-10, 0, -10);
     }
 }
