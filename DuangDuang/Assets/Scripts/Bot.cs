@@ -25,6 +25,7 @@ public class Bot : MonoBehaviour
     private bool InMotionOfForce;
     //This is just use for keeping a time, such that after x second the navMeshAgent is re-enabled.
     private float edgeDetectTimer;
+    private bool isOnThePlane;
 
     private void Start()
     {
@@ -81,12 +82,13 @@ public class Bot : MonoBehaviour
         //    }
         //}
         
+        //Checking if I am within the platform
+        
         // if the navMeshAgent is disabled, which can only be disabled by BotFallDetect.cs
         if(this.navMeshAgent.enabled == false)
         {
-            float previousYComponent = this.transform.position.y;
             edgeDetectTimer += Time.deltaTime;
-            if(timer >= 3.0)
+            if(edgeDetectTimer >= 3.0 && isOnThePlane)
             {
                 this.navMeshAgent.enabled = true;
                 edgeDetectTimer = 0.0f;
@@ -158,7 +160,7 @@ public class Bot : MonoBehaviour
     public void calledFromEscape(Vector3 direction)
     {
         //if there is not bot chase you change state from escape to chase
-        if (direction.y == -1)
+        if (direction.y == -1 && navMeshAgent.enabled != false)
         {
             stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
             chaseTarget = null;
@@ -166,32 +168,35 @@ public class Bot : MonoBehaviour
             return;
         }
         // if the escape destination is off the map change direction
-        if (transform.position.z <= 10)
+        if (transform.position.z <= 10 && navMeshAgent.enabled != false)
         {
             navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z + 20));
 
             return;
         }
-        if (transform.position.z >= 40)
+        if (transform.position.z >= 40 && navMeshAgent.enabled != false)
         {
             navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z - 20));
 
             return;
         }
-        if (transform.position.x <= 10)
+        if (transform.position.x <= 10 && navMeshAgent.enabled != false)
         {
             navMeshAgent.SetDestination(new Vector3(direction.x + 20, direction.y, direction.z + 20));
 
             return;
         }
-        if (transform.position.x >= 40)
+        if (transform.position.x >= 40 && navMeshAgent.enabled != false)
         {
             navMeshAgent.SetDestination(new Vector3(-direction.x - 20, direction.y, direction.z - 20));
 
             return;
         }
-
-        navMeshAgent.SetDestination(direction);
+        if(navMeshAgent.enabled != false)
+        {
+            navMeshAgent.SetDestination(direction);
+        }
+        
 
     }
     void OnCollisionEnter(Collision collision)
@@ -206,6 +211,22 @@ public class Bot : MonoBehaviour
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
             this.InMotionOfForce = true;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            isOnThePlane = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            isOnThePlane = false;
         }
     }
     public void setIsInMotionOfForce(bool temp)
