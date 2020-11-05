@@ -8,7 +8,8 @@ public class CarController : MonoBehaviour
     //movement
     [SerializeField] float mSpeed;
     [SerializeField] float mAngularSpeed;
-
+    //particle
+    [SerializeField] ParticleSystem particleTest = null;
     //bumper
     [SerializeField] float forceMagnitude;
     [SerializeField] float recoil;
@@ -30,7 +31,7 @@ public class CarController : MonoBehaviour
         {
             sPressed = true;
         }
-        
+
         if (InMotionOfForce)
         {
             if (gameObject.GetComponent<Rigidbody>().velocity.magnitude <= 0.1)
@@ -68,6 +69,7 @@ public class CarController : MonoBehaviour
 
         if (collision.gameObject.tag == "TeamA" || collision.gameObject.tag == "TeamB")
         {
+            ParticlePlay();
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
@@ -87,6 +89,11 @@ public class CarController : MonoBehaviour
     public void setIsInMotionOfForce(bool temp)
     {
         this.InMotionOfForce = temp;
+    }
+
+    public void ParticlePlay()
+    {
+        particleTest.Play();
     }
 
     public bool getIsInMotionOfForce()
