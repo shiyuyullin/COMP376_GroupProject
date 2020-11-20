@@ -5,7 +5,7 @@ using UnityEngine;
 public class TorusMovement : MonoBehaviour
 {
     float timer;
-    float cycle;
+    //float cycle;
     float speed;
     Rigidbody torus;
     //is kinematic = true
@@ -15,7 +15,7 @@ public class TorusMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cycle = 2.5f;
+        //cycle = 2.5f;
         speed = 1f;
         torus = GetComponent<Rigidbody>();
         oldPos = transform.position;

@@ -154,7 +154,6 @@ public class Bot : MonoBehaviour
                 chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
             }
         }
-
     }
 
     public void calledFromEscape(Vector3 direction)

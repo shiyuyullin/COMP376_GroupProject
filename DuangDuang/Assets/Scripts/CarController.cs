@@ -93,4 +93,24 @@ public class CarController : MonoBehaviour
     {
         return InMotionOfForce;
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Items")
+        {
+            int random = Random.Range(0, 3);
+            switch (random)
+            {
+                case 0:
+
+                    break;
+
+                case 1:
+                    break;
+
+                case 2:
+                    break;
+            }
+        }
+    }
 }

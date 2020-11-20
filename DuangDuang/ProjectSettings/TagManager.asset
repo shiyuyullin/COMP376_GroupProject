@@ -8,6 +8,7 @@ TagManager:
   - Obstacles
   - TeamA
   - TeamB
+  - Items
   layers:
   - Default
   - TransparentFX
