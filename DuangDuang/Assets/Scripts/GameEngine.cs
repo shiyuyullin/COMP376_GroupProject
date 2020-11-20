@@ -9,7 +9,19 @@ public class GameEngine : MonoBehaviour
     [SerializeField] private GameObject friendlyBots; // 2
 
 
-    private float timer;
+    //private float timer;
+
+    [SerializeField]
+    GameObject itemPrefab;
+    float spawnTime = 5f;
+    float timer = 0;
+    int totalItem = 1;
+    int createdItem = 0;
+    //item effect time
+    float effectsTime = 5f;
+    float rotateSpeed = 2f;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -27,10 +39,28 @@ public class GameEngine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Time.realtimeSinceStartup >= 5)
+        if (Time.realtimeSinceStartup >= 5)
         {
             Time.timeScale = 1;
         }
+
+        //item appear
+        timer += Time.deltaTime;
+        if (createdItem < totalItem)
+        {
+            if (timer > spawnTime)
+            {
+                spawnItem();
+                createdItem ++;
+            }
+        }
     }
 
+    void spawnItem()
+    {
+        Vector3 position = new Vector3(0, 0.1f, 25);
+        GameObject iceCream = Instantiate(itemPrefab, position, itemPrefab.transform.rotation);
+        //TODO rotate slowly
+        Debug.Log("Item spawn!");
+    }
 }
