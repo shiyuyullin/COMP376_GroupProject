@@ -17,9 +17,6 @@ public class GameEngine : MonoBehaviour
     float timer = 0;
     int totalItem = 1;
     int createdItem = 0;
-    //item effect time
-    float effectsTime = 5f;
-    float rotateSpeed = 2f;
 
     
 

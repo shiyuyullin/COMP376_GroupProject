@@ -27,6 +27,13 @@ public class Bot : MonoBehaviour
     private float edgeDetectTimer;
     private bool isOnThePlane;
 
+    //item
+    [SerializeField] float itmeDuration;
+    [SerializeField] float speedChangeRatio;
+    [SerializeField] float largeSizeChangeRatio;
+    [SerializeField] float smallSizeChangeRatio;
+    float durationTimer;
+
     private void Start()
     {
 
@@ -38,6 +45,14 @@ public class Bot : MonoBehaviour
         //the default state is to chase item
         this.stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
         state = "chase";
+
+        //items
+        //duration = gameObject.GetComponent<CarController>().getDuration();
+        //speedChangeRatio = gameObject.GetComponent<CarController>().getSpeedChangeRatio();
+        //largeSizeChangeRatio = gameObject.GetComponent<CarController>().getLargeSizeRatio();
+        //smallSizeChangeRatio = gameObject.GetComponent<CarController>().getSmallSizeRatio();
+        //durationTimer = gameObject.GetComponent<CarController>().getDurationTimer();
+        //Debug.Log("Get variables = " + duration + speedChangeRatio + largeSizeChangeRatio + smallSizeChangeRatio + durationTimer);
     }
 
     private void Update()
@@ -238,4 +253,72 @@ public class Bot : MonoBehaviour
         return InMotionOfForce;
     }
 
+    //Collide item
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Items")
+        {
+            int random = Random.Range(0, 3);
+            //int random = 2;
+            Debug.Log("Effect Type: " + random);
+            durationTimer += Time.deltaTime;
+
+            switch (random)
+            {
+                case 0:
+                    StartCoroutine(changeSpeed());
+                    break;
+                case 1:
+                    StartCoroutine(changeSizeSmall());
+                    break;
+                case 2:
+                    StartCoroutine(changeSizeLarge());
+                    break;
+            }
+
+            durationTimer = 0;
+        }
+    }
+
+    //item effect
+    IEnumerator changeSpeed()
+    {
+        float originSpeed = navMeshAgent.speed;
+        navMeshAgent.speed *= speedChangeRatio;
+        Debug.Log("Speed Changed = " + navMeshAgent.speed);
+
+        yield return new WaitForSeconds(itmeDuration);
+
+        navMeshAgent.speed = originSpeed;
+        Debug.Log("Speed Back = " + navMeshAgent.speed);
+    }
+    //item effect
+    IEnumerator changeSizeSmall()
+    {
+        Vector3 originSize = transform.localScale;
+        Vector3 tempSize = originSize * smallSizeChangeRatio;
+        transform.localScale = tempSize;
+        Debug.Log("Size changed!");
+
+        yield return new WaitForSeconds(itmeDuration);
+
+        transform.localScale = originSize;
+        Debug.Log("Size Back!");
+    }
+    //item effect
+    IEnumerator changeSizeLarge()
+    {
+        Vector3 originSize = transform.localScale;
+        float mass = gameObject.GetComponent<Rigidbody>().mass;
+        Vector3 tempSize = originSize * largeSizeChangeRatio;
+        float tempMass = mass * largeSizeChangeRatio;
+        transform.localScale = tempSize;
+        Debug.Log("Size = " + largeSizeChangeRatio + ", Mass = " + tempMass);
+
+        yield return new WaitForSeconds(itmeDuration);
+
+        transform.localScale = originSize;
+        gameObject.GetComponent<Rigidbody>().mass = mass;
+        Debug.Log("Size Back! " + ", Mass = " + gameObject.GetComponent<Rigidbody>().mass);
+    }
 }

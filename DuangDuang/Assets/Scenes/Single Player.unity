@@ -2722,6 +2722,34 @@ PrefabInstance:
       propertyPath: forceMagnitude
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5142876052396582992, guid: 68beda6f1c41e6849b1c9359813829bf, type: 3}
+      propertyPath: duration
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5142876052396582992, guid: 68beda6f1c41e6849b1c9359813829bf, type: 3}
+      propertyPath: speedChangeRatio
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5142876052396582992, guid: 68beda6f1c41e6849b1c9359813829bf, type: 3}
+      propertyPath: sizeChangeRatio
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5142876052396582992, guid: 68beda6f1c41e6849b1c9359813829bf, type: 3}
+      propertyPath: alphaChangeRatio
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5142876052396582992, guid: 68beda6f1c41e6849b1c9359813829bf, type: 3}
+      propertyPath: smallSizeChangeRatio
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5142876052396582992, guid: 68beda6f1c41e6849b1c9359813829bf, type: 3}
+      propertyPath: largeSizeChangeRatio
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5142876052396582992, guid: 68beda6f1c41e6849b1c9359813829bf, type: 3}
+      propertyPath: itemDuration
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5142876052396582993, guid: 68beda6f1c41e6849b1c9359813829bf, type: 3}
       propertyPath: m_Center.y
       value: 0.11
