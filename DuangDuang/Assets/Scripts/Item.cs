@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField]
-    GameObject[] teamA;
-
-    float rotateSpeed = 20f;
+    //float rotateSpeed = 20f;
 
     // Start is called before the first frame update
     void Start()

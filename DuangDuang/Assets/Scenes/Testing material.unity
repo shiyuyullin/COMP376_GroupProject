@@ -229,7 +229,7 @@ PrefabInstance:
     - target: {fileID: 5690401757153878293, guid: dde22066e8336ca4dbe2cb3169b9d2de, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 54e5e3f1a4dc0524f870c8a01305d32c, type: 2}
+      objectReference: {fileID: 2100000, guid: 60d8ff4d65411594e91bf6f1a598938f, type: 2}
     - target: {fileID: 8159290069924316059, guid: dde22066e8336ca4dbe2cb3169b9d2de, type: 3}
       propertyPath: m_Name
       value: Donut_maple
@@ -1497,6 +1497,7 @@ MonoBehaviour:
   mainPlayer: {fileID: 5142876052396582994, guid: 68beda6f1c41e6849b1c9359813829bf, type: 3}
   enemyBots: {fileID: 7977704503868964405, guid: ce223566f1236364facfcfa79c061508, type: 3}
   friendlyBots: {fileID: 4818305098041734814, guid: d7b637d40b7eb124b91e0b5284d60fe5, type: 3}
+  itemPrefab: {fileID: 0}
 --- !u!4 &1020186841
 Transform:
   m_ObjectHideFlags: 0

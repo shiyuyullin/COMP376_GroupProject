@@ -27,7 +27,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamA: []
-  target: {fileID: 3205088601489519380}
 --- !u!1001 &2358666622629219909
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -94,6 +93,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9b74e94db78091e42b4127bdc2d3176f, type: 3}
       propertyPath: m_Name
       value: Ice-cream
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9b74e94db78091e42b4127bdc2d3176f, type: 3}
+      propertyPath: m_TagString
+      value: Items
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b74e94db78091e42b4127bdc2d3176f, type: 3}

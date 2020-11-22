@@ -20,6 +20,15 @@ public class CarController : MonoBehaviour
 
     private bool InMotionOfForce;
 
+    //item
+    [SerializeField] float itemDuration;
+    [SerializeField] float speedChangeRatio;
+    [SerializeField] float largeSizeChangeRatio;
+    [SerializeField] float smallSizeChangeRatio;
+    [SerializeField] float alphaChangeRatio;
+    float durationTimer;
+
+
     void Update()
     {
         if (Input.GetKey(KeyCode.W))
@@ -99,18 +108,105 @@ public class CarController : MonoBehaviour
         if (other.gameObject.tag == "Items")
         {
             int random = Random.Range(0, 3);
+            //int random = 2;
+            Debug.Log("Effect Type: " + random);
+            durationTimer += Time.deltaTime;
+
             switch (random)
             {
                 case 0:
-
+                    StartCoroutine(changeSpeed());
                     break;
-
                 case 1:
-                    break;
-
+                    StartCoroutine(changeSizeSmall());
+                    break;                  
                 case 2:
+                    StartCoroutine(changeSizeLarge());
                     break;
             }
+
+            durationTimer = 0;
         }
     }
+
+    IEnumerator changeSpeed()
+    {
+        float originSpeed = mSpeed;
+        mSpeed *= speedChangeRatio;
+        Debug.Log("Speed Changed!");
+
+        yield return new WaitForSeconds(itemDuration);
+
+        mSpeed = originSpeed;
+        Debug.Log("Speed Back!");
+    }
+
+    IEnumerator changeSizeSmall()
+    {
+        Vector3 originSize = transform.localScale;
+        Vector3 tempSize = originSize * smallSizeChangeRatio;
+        transform.localScale = tempSize;
+        Debug.Log("Size changed!");
+
+        yield return new WaitForSeconds(itemDuration);
+
+        transform.localScale = originSize;
+        Debug.Log("Size Back!");
+    }
+
+    IEnumerator changeSizeLarge()
+    {
+        Vector3 originSize = transform.localScale;
+        float mass = gameObject.GetComponent<Rigidbody>().mass;
+        Vector3 tempSize = originSize * largeSizeChangeRatio;
+        float tempMass = mass * largeSizeChangeRatio;
+        transform.localScale = tempSize;
+        Debug.Log("Size = " + largeSizeChangeRatio + ", Mass = " + tempMass);
+
+        yield return new WaitForSeconds(itemDuration);
+
+        transform.localScale = originSize;
+        gameObject.GetComponent<Rigidbody>().mass = mass;
+        Debug.Log("Size Back! " + ", Mass = " + gameObject.GetComponent<Rigidbody>().mass);
+    }
+
+    IEnumerator changeTransparency()
+    {
+        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
+        //Material[] materials = gameObject.GetComponentInChildren<Renderer>().materials;
+        Material[] materials = new Material[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            materials = renderers[i].materials;
+            for(int j=0; j<materials.Length; j++)
+            {
+                Color newColor = materials[j].color;
+                newColor.a = alphaChangeRatio;
+                materials[j].color = newColor;
+            }
+        }
+        Debug.Log("Alpha changed!");
+
+        yield return new WaitForSeconds(itemDuration);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            materials = renderers[i].materials;
+            for (int j = 0; j < materials.Length; j++)
+            {
+                Color newColor = materials[j].color;
+                newColor.a = 1;
+                materials[j].color = newColor;
+            }
+        }
+        Debug.Log("Alpha Back!");
+    }
+
+    //public float getDuration() { return duration; }
+    //public float getSpeedChangeRatio() { return speedChangeRatio; }
+    //public float getLargeSizeRatio() { return largeSizeChangeRatio; }
+    //public float getSmallSizeRatio() { return smallSizeChangeRatio; }
+    //public float getDurationTimer() { return durationTimer; }
+
 }

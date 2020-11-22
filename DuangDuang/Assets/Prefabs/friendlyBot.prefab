@@ -557,6 +557,10 @@ MonoBehaviour:
   chaseYouGameObject: []
   timer: 0
   collisonTime: 0
+  itmeDuration: 10
+  speedChangeRatio: 1.5
+  largeSizeChangeRatio: 1.5
+  smallSizeChangeRatio: 0.5
 --- !u!1 &4818305098477435133
 GameObject:
   m_ObjectHideFlags: 0
