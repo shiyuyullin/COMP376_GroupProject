@@ -89,8 +89,6 @@ public class CarController : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        //transform.Translate(vertical, 0, 0);
-        //transform.Rotate(0, horizontal, 0);
     }
 
     public void setIsInMotionOfForce(bool temp)

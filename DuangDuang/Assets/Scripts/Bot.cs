@@ -56,49 +56,7 @@ public class Bot : MonoBehaviour
     }
 
     private void Update()
-    {
-        //if the bot is off the edge
-        //if (transform.position.y < -10 || transform.position.x < 0 || transform.position.x > 50 || transform.position.z < 0 || transform.position.z > 50)
-        //{
-        //    gameObject.tag = "Untagged";
-        //    GameObject[] temp = GameObject.FindGameObjectsWithTag("Player");
-        //    for (int i = 0; i < temp.Length; i++)
-        //    {
-        //        if (temp[i].name == "Bumper Car")
-        //        {
-        //            continue;
-        //        }
-        //        if (temp[i] == gameObject)
-        //        {
-        //            continue;
-        //        }
-        //        temp[i].GetComponent<Bot>().chaseYouGameObject.Remove(gameObject);
-        //        if (temp[i].GetComponent<Bot>().chaseTarget == gameObject)
-        //        {
-        //            temp[i].GetComponent<Bot>().chaseTarget = null;
-        //        }
-
-        //    }
-        //    temp = null;
-        //    return;
-        //}
-        //re enable navMeshAgent after 2 sec collision
-        //if (navMeshAgent.enabled == false)
-        //{
-        //    collisonTime += Time.deltaTime;
-        //    if (collisonTime >= 2)
-        //    {
-        //        navMeshAgent.enabled = true;
-        //        collisonTime = -1;
-        //    }
-        //    else
-        //    {
-        //        return;
-        //    }
-        //}
-        
-        //Checking if I am within the platform
-        
+    {        
         // if the navMeshAgent is disabled, which can only be disabled by BotFallDetect.cs
         if(this.navMeshAgent.enabled == false)
         {
@@ -112,7 +70,7 @@ public class Bot : MonoBehaviour
 
         if (InMotionOfForce)
         {
-            if (this.navMeshAgent.velocity.magnitude <= 0.2)
+            if (this.navMeshAgent.velocity.magnitude <= 0.1)
             {
                 InMotionOfForce = false;
             }

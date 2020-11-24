@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    //float rotateSpeed = 20f;
+    float rotateSpeed = 180f;
 
     // Start is called before the first frame update
     void Start()
@@ -15,7 +15,7 @@ public class Item : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //transform.RotateAround(transform.position, Vector3.up, rotateSpeed * Time.deltaTime);
+        transform.RotateAround(transform.position, Vector3.up, rotateSpeed * Time.deltaTime);
     }
 
     void OnTriggerEnter(Collider other)
