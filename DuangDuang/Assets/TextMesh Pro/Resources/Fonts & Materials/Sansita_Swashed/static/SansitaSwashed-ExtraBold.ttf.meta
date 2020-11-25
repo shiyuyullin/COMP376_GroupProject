@@ -1,0 +1,28 @@
+fileFormatVersion: 2
+guid: dfa7a5a0c2a9bfb49b661f89f467c104
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Sansita Swashed
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d50f29a6f98b59a4cb2021ddff9390d2, type: 3}
+  - {fileID: 12800000, guid: bd1f55d7ee14b2c449e711d7fd79a4ab, type: 3}
+  - {fileID: 12800000, guid: 7130503a0041a534cb463ac70a2a04fe, type: 3}
+  - {fileID: 12800000, guid: d06aed4b065886e49bb150f85d04717e, type: 3}
+  - {fileID: 12800000, guid: 2d26a83e10b493f44b7e955b03495e29, type: 3}
+  - {fileID: 12800000, guid: 0fe9a34ffe9192849b6f0879f2927786, type: 3}
+  - {fileID: 12800000, guid: 9da956bf670a370438bfd907f5bd22c7, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
