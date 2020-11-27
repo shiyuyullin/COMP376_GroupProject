@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1511477039091906269}
   m_Layer: 0
   m_Name: Hammer
-  m_TagString: Untagged
+  m_TagString: Obstacles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -226,8 +226,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.2732306, y: 2, z: 2.273228}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.2732306, y: 2, z: 2.0046234}
+  m_Center: {x: 0.0000000032942458, y: 8.5523705e-10, z: -0.013817072}
 --- !u!1 &7538389062015375816
 GameObject:
   m_ObjectHideFlags: 0
