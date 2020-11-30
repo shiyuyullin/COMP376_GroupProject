@@ -26,7 +26,7 @@ public class Bot : MonoBehaviour
     //This is just use for keeping a time, such that after x second the navMeshAgent is re-enabled.
     private float edgeDetectTimer;
     private bool isOnThePlane;
-
+    LayerMask itemLayer;
     //item
     [SerializeField] float itmeDuration;
     [SerializeField] float speedChangeRatio;
@@ -36,7 +36,7 @@ public class Bot : MonoBehaviour
 
     private void Start()
     {
-
+        itemLayer = LayerMask.GetMask("Item");
         chaseYouGameObject = new List<GameObject>();
         timer = 0;
         navMeshAgent = this.GetComponent<NavMeshAgent>();
@@ -88,16 +88,23 @@ public class Bot : MonoBehaviour
 
     public void targetFound(SearchResults searchResults)
     {
+        state ="chasing";
         //if there is two and more bot chase you start to escape, so the bots don't all stack together
         if (chaseYouGameObject.Count >= 2)
         {
             this.stateMachine.changeState(new Escape(this.gameObject, this.calledFromEscape));
             chaseTarget = null;
-            state = "escape";
+            
 
             return;
         }
-
+        var hitObjects = Physics.OverlapSphere(transform.position, 10, itemLayer);
+        if(hitObjects.Length>0){
+            this.stateMachine.changeState(new SearchItem(this.gameObject,this.searchItem));
+            chaseTarget = null;
+            
+            return;
+        }
         timer += Time.deltaTime;
         if (chaseTarget == null)
         {
@@ -131,6 +138,7 @@ public class Bot : MonoBehaviour
 
     public void calledFromEscape(Vector3 direction)
     {
+        state="escaping";
         //if there is not bot chase you change state from escape to chase
         if (direction.y == -1 && navMeshAgent.enabled != false)
         {
@@ -171,6 +179,19 @@ public class Bot : MonoBehaviour
         
 
     }
+
+    //search item
+    public void searchItem(Vector3 position_){
+        state ="findItem";
+        if(position_.y==-1){
+            stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
+            return;
+        }
+        if(navMeshAgent.enabled != false){
+        navMeshAgent.SetDestination(position_);}
+    }
+
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
