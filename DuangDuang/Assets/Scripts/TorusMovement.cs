@@ -5,7 +5,7 @@ using UnityEngine;
 public class TorusMovement : MonoBehaviour
 {
     Vector3 oldPos;
-    float i = 0;
+    //float i = 0;
 
     [SerializeField] float speed;
     //[SerializeField] Transform startPoint;
