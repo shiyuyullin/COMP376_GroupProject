@@ -28,6 +28,9 @@ public class CarController : MonoBehaviour
     [SerializeField] float alphaChangeRatio;
     float durationTimer;
 
+    public ProgressBar progressBar;
+    bool barStart = false;
+
 
     void Update()
     {
@@ -49,6 +52,10 @@ public class CarController : MonoBehaviour
         }
         Move();
 
+        //if (barStart)
+        //{
+        //    progressBar.startCountdown(itemDuration);
+        //}
     }
 
     //Using fixed updated to get a smooth movement
@@ -68,6 +75,12 @@ public class CarController : MonoBehaviour
                 sPressed = false;
             }
             transform.Rotate(0, horizontal * mAngularSpeed, 0);
+        }
+
+        //Debug.Log(barStart);
+        if (barStart)
+        {
+            progressBar.startCountdown(itemDuration);
         }
     }
 
@@ -110,6 +123,10 @@ public class CarController : MonoBehaviour
             Debug.Log("Effect Type: " + random);
             durationTimer += Time.deltaTime;
 
+            //progressBar.SendMessage("startCountdown", SendMessageOptions.DontRequireReceiver);
+            barStart = true;
+            //Debug.Log(barStart);
+
             switch (random)
             {
                 case 0:
@@ -124,6 +141,7 @@ public class CarController : MonoBehaviour
             }
 
             durationTimer = 0;
+            //barStart = false;
         }
     }
 
@@ -137,6 +155,7 @@ public class CarController : MonoBehaviour
 
         mSpeed = originSpeed;
         Debug.Log("Speed Back!");
+        barStart = false;
     }
 
     IEnumerator changeSizeSmall()
@@ -150,6 +169,7 @@ public class CarController : MonoBehaviour
 
         transform.localScale = originSize;
         Debug.Log("Size Back!");
+        barStart = false;
     }
 
     IEnumerator changeSizeLarge()
@@ -166,6 +186,7 @@ public class CarController : MonoBehaviour
         transform.localScale = originSize;
         gameObject.GetComponent<Rigidbody>().mass = mass;
         Debug.Log("Size Back! " + ", Mass = " + gameObject.GetComponent<Rigidbody>().mass);
+        barStart = false;
     }
 
     IEnumerator changeTransparency()
