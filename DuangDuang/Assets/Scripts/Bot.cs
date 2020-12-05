@@ -26,10 +26,17 @@ public class Bot : MonoBehaviour
     //This is just use for keeping a time, such that after x second the navMeshAgent is re-enabled.
     private float edgeDetectTimer;
     private bool isOnThePlane;
+    LayerMask itemLayer;
+    //item
+    [SerializeField] float itmeDuration;
+    [SerializeField] float speedChangeRatio;
+    [SerializeField] float largeSizeChangeRatio;
+    [SerializeField] float smallSizeChangeRatio;
+    float durationTimer;
 
     private void Start()
     {
-
+        itemLayer = LayerMask.GetMask("Item");
         chaseYouGameObject = new List<GameObject>();
         timer = 0;
         navMeshAgent = this.GetComponent<NavMeshAgent>();
@@ -38,52 +45,18 @@ public class Bot : MonoBehaviour
         //the default state is to chase item
         this.stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
         state = "chase";
+
+        //items
+        //duration = gameObject.GetComponent<CarController>().getDuration();
+        //speedChangeRatio = gameObject.GetComponent<CarController>().getSpeedChangeRatio();
+        //largeSizeChangeRatio = gameObject.GetComponent<CarController>().getLargeSizeRatio();
+        //smallSizeChangeRatio = gameObject.GetComponent<CarController>().getSmallSizeRatio();
+        //durationTimer = gameObject.GetComponent<CarController>().getDurationTimer();
+        //Debug.Log("Get variables = " + duration + speedChangeRatio + largeSizeChangeRatio + smallSizeChangeRatio + durationTimer);
     }
 
     private void Update()
-    {
-        //if the bot is off the edge
-        //if (transform.position.y < -10 || transform.position.x < 0 || transform.position.x > 50 || transform.position.z < 0 || transform.position.z > 50)
-        //{
-        //    gameObject.tag = "Untagged";
-        //    GameObject[] temp = GameObject.FindGameObjectsWithTag("Player");
-        //    for (int i = 0; i < temp.Length; i++)
-        //    {
-        //        if (temp[i].name == "Bumper Car")
-        //        {
-        //            continue;
-        //        }
-        //        if (temp[i] == gameObject)
-        //        {
-        //            continue;
-        //        }
-        //        temp[i].GetComponent<Bot>().chaseYouGameObject.Remove(gameObject);
-        //        if (temp[i].GetComponent<Bot>().chaseTarget == gameObject)
-        //        {
-        //            temp[i].GetComponent<Bot>().chaseTarget = null;
-        //        }
-
-        //    }
-        //    temp = null;
-        //    return;
-        //}
-        //re enable navMeshAgent after 2 sec collision
-        //if (navMeshAgent.enabled == false)
-        //{
-        //    collisonTime += Time.deltaTime;
-        //    if (collisonTime >= 2)
-        //    {
-        //        navMeshAgent.enabled = true;
-        //        collisonTime = -1;
-        //    }
-        //    else
-        //    {
-        //        return;
-        //    }
-        //}
-        
-        //Checking if I am within the platform
-        
+    {        
         // if the navMeshAgent is disabled, which can only be disabled by BotFallDetect.cs
         if(this.navMeshAgent.enabled == false)
         {
@@ -97,7 +70,7 @@ public class Bot : MonoBehaviour
 
         if (InMotionOfForce)
         {
-            if (this.navMeshAgent.velocity.magnitude <= 0.2)
+            if (this.navMeshAgent.velocity.magnitude <= 0.1)
             {
                 InMotionOfForce = false;
             }
@@ -115,16 +88,23 @@ public class Bot : MonoBehaviour
 
     public void targetFound(SearchResults searchResults)
     {
+        state ="chasing";
         //if there is two and more bot chase you start to escape, so the bots don't all stack together
         if (chaseYouGameObject.Count >= 2)
         {
             this.stateMachine.changeState(new Escape(this.gameObject, this.calledFromEscape));
             chaseTarget = null;
-            state = "escape";
+            
 
             return;
         }
-
+        var hitObjects = Physics.OverlapSphere(transform.position, 10, itemLayer);
+        if(hitObjects.Length>0){
+            this.stateMachine.changeState(new SearchItem(this.gameObject,this.searchItem));
+            chaseTarget = null;
+            
+            return;
+        }
         timer += Time.deltaTime;
         if (chaseTarget == null)
         {
@@ -154,11 +134,11 @@ public class Bot : MonoBehaviour
                 chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
             }
         }
-
     }
 
     public void calledFromEscape(Vector3 direction)
     {
+        state="escaping";
         //if there is not bot chase you change state from escape to chase
         if (direction.y == -1 && navMeshAgent.enabled != false)
         {
@@ -199,6 +179,19 @@ public class Bot : MonoBehaviour
         
 
     }
+
+    //search item
+    public void searchItem(Vector3 position_){
+        state ="findItem";
+        if(position_.y==-1){
+            stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
+            return;
+        }
+        if(navMeshAgent.enabled != false){
+        navMeshAgent.SetDestination(position_);}
+    }
+
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
@@ -239,4 +232,72 @@ public class Bot : MonoBehaviour
         return InMotionOfForce;
     }
 
+    //Collide item
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Items")
+        {
+            int random = Random.Range(0, 3);
+            //int random = 2;
+            Debug.Log("Effect Type: " + random);
+            durationTimer += Time.deltaTime;
+
+            switch (random)
+            {
+                case 0:
+                    StartCoroutine(changeSpeed());
+                    break;
+                case 1:
+                    StartCoroutine(changeSizeSmall());
+                    break;
+                case 2:
+                    StartCoroutine(changeSizeLarge());
+                    break;
+            }
+
+            durationTimer = 0;
+        }
+    }
+
+    //item effect
+    IEnumerator changeSpeed()
+    {
+        float originSpeed = navMeshAgent.speed;
+        navMeshAgent.speed *= speedChangeRatio;
+        Debug.Log("Speed Changed = " + navMeshAgent.speed);
+
+        yield return new WaitForSeconds(itmeDuration);
+
+        navMeshAgent.speed = originSpeed;
+        Debug.Log("Speed Back = " + navMeshAgent.speed);
+    }
+    //item effect
+    IEnumerator changeSizeSmall()
+    {
+        Vector3 originSize = transform.localScale;
+        Vector3 tempSize = originSize * smallSizeChangeRatio;
+        transform.localScale = tempSize;
+        Debug.Log("Size changed!");
+
+        yield return new WaitForSeconds(itmeDuration);
+
+        transform.localScale = originSize;
+        Debug.Log("Size Back!");
+    }
+    //item effect
+    IEnumerator changeSizeLarge()
+    {
+        Vector3 originSize = transform.localScale;
+        float mass = gameObject.GetComponent<Rigidbody>().mass;
+        Vector3 tempSize = originSize * largeSizeChangeRatio;
+        float tempMass = mass * largeSizeChangeRatio;
+        transform.localScale = tempSize;
+        Debug.Log("Size = " + largeSizeChangeRatio + ", Mass = " + tempMass);
+
+        yield return new WaitForSeconds(itmeDuration);
+
+        transform.localScale = originSize;
+        gameObject.GetComponent<Rigidbody>().mass = mass;
+        Debug.Log("Size Back! " + ", Mass = " + gameObject.GetComponent<Rigidbody>().mass);
+    }
 }

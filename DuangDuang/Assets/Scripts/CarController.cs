@@ -21,6 +21,18 @@ public class CarController : MonoBehaviour
 
     private bool InMotionOfForce;
 
+    //item
+    [SerializeField] float itemDuration;
+    [SerializeField] float speedChangeRatio;
+    [SerializeField] float largeSizeChangeRatio;
+    [SerializeField] float smallSizeChangeRatio;
+    [SerializeField] float alphaChangeRatio;
+    float durationTimer;
+
+    public ProgressBar progressBar;
+    bool barStart = false;
+
+
     void Update()
     {
         if (Input.GetKey(KeyCode.W))
@@ -41,6 +53,10 @@ public class CarController : MonoBehaviour
         }
         Move();
 
+        //if (barStart)
+        //{
+        //    progressBar.startCountdown(itemDuration);
+        //}
     }
 
     //Using fixed updated to get a smooth movement
@@ -60,6 +76,12 @@ public class CarController : MonoBehaviour
                 sPressed = false;
             }
             transform.Rotate(0, horizontal * mAngularSpeed, 0);
+        }
+
+        //Debug.Log(barStart);
+        if (barStart)
+        {
+            progressBar.startCountdown(itemDuration);
         }
     }
 
@@ -82,8 +104,6 @@ public class CarController : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        //transform.Translate(vertical, 0, 0);
-        //transform.Rotate(0, horizontal, 0);
     }
 
     public void setIsInMotionOfForce(bool temp)
@@ -100,4 +120,119 @@ public class CarController : MonoBehaviour
     {
         return InMotionOfForce;
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Items")
+        {
+            int random = Random.Range(0, 3);
+            //int random = 2;
+            Debug.Log("Effect Type: " + random);
+            durationTimer += Time.deltaTime;
+
+            //progressBar.SendMessage("startCountdown", SendMessageOptions.DontRequireReceiver);
+            barStart = true;
+            //Debug.Log(barStart);
+
+            switch (random)
+            {
+                case 0:
+                    StartCoroutine(changeSpeed());
+                    break;
+                case 1:
+                    StartCoroutine(changeSizeSmall());
+                    break;                  
+                case 2:
+                    StartCoroutine(changeSizeLarge());
+                    break;
+            }
+
+            durationTimer = 0;
+            //barStart = false;
+        }
+    }
+
+    IEnumerator changeSpeed()
+    {
+        float originSpeed = mSpeed;
+        mSpeed *= speedChangeRatio;
+        Debug.Log("Speed Changed!");
+
+        yield return new WaitForSeconds(itemDuration);
+
+        mSpeed = originSpeed;
+        Debug.Log("Speed Back!");
+        barStart = false;
+    }
+
+    IEnumerator changeSizeSmall()
+    {
+        Vector3 originSize = transform.localScale;
+        Vector3 tempSize = originSize * smallSizeChangeRatio;
+        transform.localScale = tempSize;
+        Debug.Log("Size changed!");
+
+        yield return new WaitForSeconds(itemDuration);
+
+        transform.localScale = originSize;
+        Debug.Log("Size Back!");
+        barStart = false;
+    }
+
+    IEnumerator changeSizeLarge()
+    {
+        Vector3 originSize = transform.localScale;
+        float mass = gameObject.GetComponent<Rigidbody>().mass;
+        Vector3 tempSize = originSize * largeSizeChangeRatio;
+        float tempMass = mass * largeSizeChangeRatio;
+        transform.localScale = tempSize;
+        Debug.Log("Size = " + largeSizeChangeRatio + ", Mass = " + tempMass);
+
+        yield return new WaitForSeconds(itemDuration);
+
+        transform.localScale = originSize;
+        gameObject.GetComponent<Rigidbody>().mass = mass;
+        Debug.Log("Size Back! " + ", Mass = " + gameObject.GetComponent<Rigidbody>().mass);
+        barStart = false;
+    }
+
+    IEnumerator changeTransparency()
+    {
+        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>();
+        //Material[] materials = gameObject.GetComponentInChildren<Renderer>().materials;
+        Material[] materials = new Material[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            materials = renderers[i].materials;
+            for(int j=0; j<materials.Length; j++)
+            {
+                Color newColor = materials[j].color;
+                newColor.a = alphaChangeRatio;
+                materials[j].color = newColor;
+            }
+        }
+        Debug.Log("Alpha changed!");
+
+        yield return new WaitForSeconds(itemDuration);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            materials = renderers[i].materials;
+            for (int j = 0; j < materials.Length; j++)
+            {
+                Color newColor = materials[j].color;
+                newColor.a = 1;
+                materials[j].color = newColor;
+            }
+        }
+        Debug.Log("Alpha Back!");
+    }
+
+    //public float getDuration() { return duration; }
+    //public float getSpeedChangeRatio() { return speedChangeRatio; }
+    //public float getLargeSizeRatio() { return largeSizeChangeRatio; }
+    //public float getSmallSizeRatio() { return smallSizeChangeRatio; }
+    //public float getDurationTimer() { return durationTimer; }
+
 }

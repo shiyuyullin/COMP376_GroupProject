@@ -9,7 +9,7 @@ public class Donut : MonoBehaviour
     {
         if (collision.gameObject.tag == "TeamA" || collision.gameObject.tag == "TeamB")
         {
-            collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(20f, transform.position, 15f, 0, ForceMode.Impulse);
+            collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(20f, transform.position, 10f, 0, ForceMode.Impulse);
             if (collision.gameObject.GetComponent<CarController>() != null)
             {
                 collision.gameObject.GetComponent<CarController>().setIsInMotionOfForce(true);

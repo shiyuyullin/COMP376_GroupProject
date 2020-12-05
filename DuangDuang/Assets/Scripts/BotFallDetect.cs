@@ -14,7 +14,10 @@ public class BotFallDetect : MonoBehaviour
         // In bot.cs, it will handle the case it does not fall out, and re-enable navMeshAgent after x second.
         if(other.gameObject.GetComponent<NavMeshAgent>() != null)
         {
-            other.gameObject.GetComponent<NavMeshAgent>().enabled = false;
+            if(other.gameObject.GetComponent<Bot>().getIsInMotionOfForce())
+            {
+                other.gameObject.GetComponent<NavMeshAgent>().enabled = false;
+            }
         }
     }
 
