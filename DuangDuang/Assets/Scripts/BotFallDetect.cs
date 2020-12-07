@@ -17,6 +17,8 @@ public class BotFallDetect : MonoBehaviour
             if(other.gameObject.GetComponent<Bot>().getIsInMotionOfForce())
             {
                 other.gameObject.GetComponent<NavMeshAgent>().enabled = false;
+                
+                
             }
         }
     }
