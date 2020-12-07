@@ -7,7 +7,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Bot : MonoBehaviour
 {
-    private StateMachine stateMachine = new StateMachine();
+    public StateMachine stateMachine = new StateMachine();
     [SerializeField] private LayerMask TargetItemLayer;
     [SerializeField] private float viewrange;
     [SerializeField] private string tagToLookFor;
@@ -60,6 +60,7 @@ public class Bot : MonoBehaviour
         // if the navMeshAgent is disabled, which can only be disabled by BotFallDetect.cs
         if(this.navMeshAgent.enabled == false)
         {
+            
             edgeDetectTimer += Time.deltaTime;
             if(edgeDetectTimer >= 3.0 && isOnThePlane)
             {
@@ -90,22 +91,7 @@ public class Bot : MonoBehaviour
     {
         state ="chasing";
         //if there is two and more bot chase you start to escape, so the bots don't all stack together
-        if (chaseYouGameObject.Count >= 2)
-        {
-            this.stateMachine.changeState(new Escape(this.gameObject, this.calledFromEscape));
-            chaseTarget = null;
-            
-
-            return;
-        }
-        var hitObjects = Physics.OverlapSphere(transform.position, 10, itemLayer);
-        if(hitObjects.Length>0){
-            this.stateMachine.changeState(new SearchItem(this.gameObject,this.searchItem));
-            chaseTarget = null;
-            
-            return;
-        }
-        timer += Time.deltaTime;
+        
         if (chaseTarget == null)
         {
             int chaseIndex = Random.Range(0, searchResults.allHitObjectsWithRequiredTag.Count);
@@ -134,12 +120,37 @@ public class Bot : MonoBehaviour
                 chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
             }
         }
+        if (chaseYouGameObject.Count >= 2)
+        {
+            this.stateMachine.changeState(new Escape(this.gameObject, this.calledFromEscape));
+            chaseTarget = null;
+            
+
+            return;
+        }
+        var hitObjects = Physics.OverlapSphere(transform.position, 10, itemLayer);
+        if(hitObjects.Length>0){
+            this.stateMachine.changeState(new SearchItem(this.gameObject,this.searchItem));
+            chaseTarget = null;
+            
+            return;
+        }
+        timer += Time.deltaTime;
     }
 
     public void calledFromEscape(Vector3 direction)
     {
         state="escaping";
         //if there is not bot chase you change state from escape to chase
+        // if(navMeshAgent.enaled!=false){
+
+        // }
+        if(navMeshAgent.enabled == false){
+            stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
+            chaseTarget = null;
+
+            return;
+        }
         if (direction.y == -1 && navMeshAgent.enabled != false)
         {
             stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
@@ -147,31 +158,31 @@ public class Bot : MonoBehaviour
 
             return;
         }
-        // if the escape destination is off the map change direction
-        if (transform.position.z <= 10 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z + 20));
+        // // if the escape destination is off the map change direction
+        // if (transform.position.z <= 10 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z + 20));
 
-            return;
-        }
-        if (transform.position.z >= 40 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z - 20));
+        //     return;
+        // }
+        // if (transform.position.z >= 40 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z - 20));
 
-            return;
-        }
-        if (transform.position.x <= 10 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(direction.x + 20, direction.y, direction.z + 20));
+        //     return;
+        // }
+        // if (transform.position.x <= 10 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(direction.x + 20, direction.y, direction.z + 20));
 
-            return;
-        }
-        if (transform.position.x >= 40 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(-direction.x - 20, direction.y, direction.z - 20));
+        //     return;
+        // }
+        // if (transform.position.x >= 40 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(-direction.x - 20, direction.y, direction.z - 20));
 
-            return;
-        }
+        //     return;
+        // }
         if(navMeshAgent.enabled != false)
         {
             navMeshAgent.SetDestination(direction);
