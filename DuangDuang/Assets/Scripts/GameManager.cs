@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,15 +11,6 @@ public class GameManager : MonoBehaviour
     {
         Invoke("DisappearStartText", 1f);
     }
-
-    void Update()
-    {
-	if (Input.GetKey("escape"))
-        {
-            SceneManager.LoadScene(0);
-        }
-    }
-
 
     public void ShowEndText()
     {
