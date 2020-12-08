@@ -12,6 +12,7 @@ public class Bot : MonoBehaviour
     [SerializeField] private float viewrange;
     [SerializeField] private string tagToLookFor;
     [SerializeField] float forceMagnitude;
+    [SerializeField] float friendlyForceMagnitude;
     [SerializeField] float recoil;
     [SerializeField] public GameObject chaseTarget;
     //just to see in the unity
@@ -62,7 +63,7 @@ public class Bot : MonoBehaviour
         {
             
             edgeDetectTimer += Time.deltaTime;
-            if(edgeDetectTimer >= 3.0 && isOnThePlane)
+            if(edgeDetectTimer >= 1.0f && isOnThePlane)
             {
                 this.navMeshAgent.enabled = true;
                 edgeDetectTimer = 0.0f;
@@ -104,7 +105,7 @@ public class Bot : MonoBehaviour
             }
         }
         // change chase target every 5 sec
-        else if (timer >= 5)
+        else if (timer >= 8)
         {
             timer = 0;
             if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
@@ -207,10 +208,29 @@ public class Bot : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
 
-        if (collision.collider.CompareTag("TeamA") || collision.collider.CompareTag("TeamB"))
+        if(this.tag == "TeamA" && collision.gameObject.tag == "TeamA")
         {
-            //GetComponent<NavMeshAgent>().enabled = false;
-            //collisonTime = 0;
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * friendlyForceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+        }
+        if (this.tag == "TeamB" && collision.gameObject.tag == "TeamB")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * friendlyForceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+        }
+        if (this.tag == "TeamA" && collision.gameObject.tag == "TeamB")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+        }
+        if (this.tag == "TeamB" && collision.gameObject.tag == "TeamA")
+        {
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);

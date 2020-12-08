@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 
 public class DeadZone : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class DeadZone : MonoBehaviour
     //Map-J
     GameObject[] respawns;
     int respawnCounter = 0;
+    int respawnCounter2 = 3;
 
     void Start()
     {
@@ -17,6 +19,10 @@ public class DeadZone : MonoBehaviour
         sceneName = currentScene.name;
 
         if (sceneName == "Map-J")
+        {
+            respawns = GameObject.FindGameObjectsWithTag("Respawn");
+        }
+        if(sceneName == "Map-Sh")
         {
             respawns = GameObject.FindGameObjectsWithTag("Respawn");
         }
@@ -50,6 +56,18 @@ public class DeadZone : MonoBehaviour
             if(respawnCounter == respawns.Length - 1)
             {
                 respawnCounter = 0;
+            }
+        }
+        if(sceneName == "Map-Sh")
+        {
+            if(obj.tag == "TeamA")
+            {
+                obj.transform.position = respawns[0].transform.position;
+            }
+            if(obj.tag == "TeamB")
+            {
+                obj.transform.position = respawns[3].transform.position;
+
             }
         }
     }

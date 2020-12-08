@@ -11,6 +11,7 @@ public class CarController : MonoBehaviour
 
     //bumper
     [SerializeField] float forceMagnitude;
+    [SerializeField] float friendlyForceMagnitude;
     [SerializeField] float recoil;
 
     private float horizontal;
@@ -30,26 +31,28 @@ public class CarController : MonoBehaviour
 
     public ProgressBar progressBar;
     bool barStart = false;
+    private bool grounded;
 
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-            wPressed = true;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            sPressed = true;
-        }
-        
         if (InMotionOfForce)
         {
-            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude <= 0.1)
+            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude <= 0.01)
             {
                 InMotionOfForce = false;
             }
         }
+        Debug.Log(InMotionOfForce);
+        if (Input.GetKey(KeyCode.W) && !InMotionOfForce)
+        {
+            wPressed = true;
+        }
+        if (Input.GetKey(KeyCode.S) && !InMotionOfForce)
+        {
+            sPressed = true;
+        }
+        
         Move();
 
         //if (barStart)
@@ -63,13 +66,12 @@ public class CarController : MonoBehaviour
     {
         if (!InMotionOfForce)
         {
-            if (wPressed)
+            if (wPressed && grounded)
             {
                 gameObject.GetComponent<Rigidbody>().velocity = -transform.right * mSpeed;
-
                 wPressed = false;
             }
-            if (sPressed)
+            if (sPressed && grounded)
             {
                 gameObject.GetComponent<Rigidbody>().velocity = transform.right * mSpeed;
                 sPressed = false;
@@ -86,14 +88,40 @@ public class CarController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
+        if (collision.gameObject.tag == "Ground") { }
 
-        if (collision.gameObject.tag == "TeamA" || collision.gameObject.tag == "TeamB")
+        if (collision.gameObject.tag == "Obstacle"){ }
+        
+        if(collision.gameObject.tag == "TeamA")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * friendlyForceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+        }
+
+        if (collision.gameObject.tag == "TeamB")
         {
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
             this.InMotionOfForce = true;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            grounded = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            grounded = false;
         }
     }
 
