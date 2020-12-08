@@ -30,6 +30,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -356745530101446100, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
+--- !u!208 &1750813852
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8159290069924316059}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.726, y: 0.24900001, z: 0.72900003}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.003, y: 0.010000001, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!114 &1296636325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,19 +67,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.67
+      value: -2.18
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: -0.6099932
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 20.76
+      value: -37.660316
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_LocalRotation.y
@@ -95,24 +111,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_LocalScale.x
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_LocalScale.y
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_LocalScale.z
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_Name
-      value: Donut_chocolate
+      value: Donut
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
       propertyPath: m_TagString
       value: Obstacles
       objectReference: {fileID: 0}
+    - target: {fileID: 3675686031632457695, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d5f1cf1b9863df94292c57a9337d023f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8269b7c59377e5941bdaee1d6d1f3978, type: 3}
 --- !u!1 &8159290069924316059 stripped

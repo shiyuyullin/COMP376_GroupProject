@@ -11,16 +11,20 @@ public class GameEngine : MonoBehaviour
 
 
     //private float timer;
-
-    [SerializeField]
-    GameObject itemPrefab;
+    [SerializeField] private GameObject fallPlat;
+    [SerializeField] private GameObject itemPrefab;
     float spawnTime = 5f;
     float timer = 0;
-    int totalItem = 1;
+    int totalItem = 3;
     int createdItem = 0;
-
+    private GameObject fallPlat1;
+    private GameObject fallPlat2;
+    private float fallPlatRespawnTimer;
+    private bool spawnFallPlat;
     //Map-J respawns
     GameObject[] respawns;
+    //Map-Sh respawn positions
+    GameObject[] shRespawnPositions;
     string sceneName;
 
     // Start is called before the first frame update
@@ -32,7 +36,6 @@ public class GameEngine : MonoBehaviour
         if (sceneName == "Map-J")
         {
             respawns = GameObject.FindGameObjectsWithTag("Respawn");
-            Debug.Log(respawns.Length);
             GameObject enemyBot1 = Instantiate(enemyBots, respawns[0].transform.position, Quaternion.identity);
             GameObject enemyBot2 = Instantiate(enemyBots, respawns[2].transform.position, Quaternion.identity);
             GameObject enemyBot3 = Instantiate(enemyBots, respawns[4].transform.position, Quaternion.identity);
@@ -46,7 +49,21 @@ public class GameEngine : MonoBehaviour
         //GameObject friendlyBot1 = Instantiate(friendlyBots, new Vector3(-18.7f, 0.0f, -10), Quaternion.identity);
         //GameObject friendlyBot2 = Instantiate(friendlyBots, new Vector3(-18.7f, 0.0f, 28.7f), Quaternion.identity);
         Time.timeScale = 0;
-
+        if(sceneName == "Map-Sh")
+        {
+            fallPlat1 = Instantiate(fallPlat, new Vector3(-42.34f, 0.858f, -12.856f), Quaternion.Euler(0, 42.793f, 0));
+            fallPlat2 = Instantiate(fallPlat, new Vector3(-44.45f, 0.858f, -10.92f), Quaternion.Euler(0, 42.793f, 0));
+            spawnFallPlat = true;
+            shRespawnPositions = GameObject.FindGameObjectsWithTag("Respawn");
+            GameObject friendlyBot1 = Instantiate(friendlyBots, shRespawnPositions[0].transform.position, Quaternion.identity);
+            GameObject friendlyBot2 = Instantiate(friendlyBots, shRespawnPositions[1].transform.position, Quaternion.identity);
+            //GameObject friendlyBot3 = Instantiate(friendlyBots, shRespawnPositions[2].transform.position, Quaternion.identity);
+            GameObject enemyBot1 = Instantiate(enemyBots, shRespawnPositions[3].transform.position, Quaternion.identity);
+            GameObject enemyBot2 = Instantiate(enemyBots, shRespawnPositions[4].transform.position, Quaternion.identity);
+            GameObject enemyBot3 = Instantiate(enemyBots, shRespawnPositions[5].transform.position, Quaternion.identity);
+            //GameObject enemyBot4 = Instantiate(enemyBots, shRespawnPositions[6].transform.position, Quaternion.identity);
+        }
+        
     }
 
     // Update is called once per frame
@@ -59,12 +76,33 @@ public class GameEngine : MonoBehaviour
 
         //item appear
         timer += Time.deltaTime;
-        if (createdItem < totalItem)
+        if (createdItem <= totalItem)
         {
-            if (timer > spawnTime)
+            if (timer >= spawnTime)
             {
                 spawnItem();
                 createdItem ++;
+            }
+        }
+        //
+        if (fallPlat1 == null && spawnFallPlat)
+        {
+            fallPlatRespawnTimer += Time.deltaTime;
+            if (fallPlatRespawnTimer >= 1.5f)
+            {
+                fallPlat1 = Instantiate(fallPlat, new Vector3(-42.34f, 0.858f, -12.856f), Quaternion.Euler(0, 42.793f, 0));
+                fallPlatRespawnTimer = 0.0f;
+
+            }
+        }
+        if (fallPlat2 == null && spawnFallPlat)
+        {
+            fallPlatRespawnTimer += Time.deltaTime;
+            if (fallPlatRespawnTimer >= 1.5f)
+            {
+                fallPlat2 = Instantiate(fallPlat, new Vector3(-44.45f, 0.858f, -10.92f), Quaternion.Euler(0, 42.793f, 0));
+                fallPlatRespawnTimer = 0.0f;
+
             }
         }
     }
@@ -76,8 +114,12 @@ public class GameEngine : MonoBehaviour
         {
             position = new Vector3(0, 0, 0);
         }
+        if(sceneName == "Map-Sh")
+        {
+            Vector3 position1 = new Vector3(-46.88069f, 0.9100018f, -45.67363f);
+            //(-8.98f,1.025999f,-40.84062f)
+            //(-47.61237f,1.19f,-7.983576f)
+        }
         GameObject iceCream = Instantiate(itemPrefab, position, itemPrefab.transform.rotation);
-        //TODO rotate slowly
-        Debug.Log("Item spawn!");
     }
 }
