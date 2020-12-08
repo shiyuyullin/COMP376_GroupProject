@@ -11,7 +11,7 @@ public class DeadZone : MonoBehaviour
     //Map-J
     GameObject[] respawns;
     int respawnCounter = 0;
-    int respawnCounter2 = 3;
+    int counter = 0;
 
     void Start()
     {

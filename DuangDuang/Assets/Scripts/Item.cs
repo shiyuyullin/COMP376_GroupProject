@@ -5,17 +5,17 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     float rotateSpeed = 180f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    float timer;
 
     // Update is called once per frame
     void Update()
     {
+        timer += Time.deltaTime;
         transform.RotateAround(transform.position, Vector3.up, rotateSpeed * Time.deltaTime);
+        if(timer >= 15.0f)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     void OnTriggerEnter(Collider other)

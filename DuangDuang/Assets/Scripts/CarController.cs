@@ -43,7 +43,6 @@ public class CarController : MonoBehaviour
                 InMotionOfForce = false;
             }
         }
-        Debug.Log(InMotionOfForce);
         if (Input.GetKey(KeyCode.W) && !InMotionOfForce)
         {
             wPressed = true;
