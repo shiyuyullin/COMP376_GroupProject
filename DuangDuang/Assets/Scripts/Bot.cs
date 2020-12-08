@@ -7,11 +7,12 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Bot : MonoBehaviour
 {
-    private StateMachine stateMachine = new StateMachine();
+    public StateMachine stateMachine = new StateMachine();
     [SerializeField] private LayerMask TargetItemLayer;
     [SerializeField] private float viewrange;
     [SerializeField] private string tagToLookFor;
     [SerializeField] float forceMagnitude;
+    [SerializeField] float friendlyForceMagnitude;
     [SerializeField] float recoil;
     [SerializeField] public GameObject chaseTarget;
     //just to see in the unity
@@ -60,8 +61,9 @@ public class Bot : MonoBehaviour
         // if the navMeshAgent is disabled, which can only be disabled by BotFallDetect.cs
         if(this.navMeshAgent.enabled == false)
         {
+            
             edgeDetectTimer += Time.deltaTime;
-            if(edgeDetectTimer >= 3.0 && isOnThePlane)
+            if(edgeDetectTimer >= 1.0f && isOnThePlane)
             {
                 this.navMeshAgent.enabled = true;
                 edgeDetectTimer = 0.0f;
@@ -90,6 +92,35 @@ public class Bot : MonoBehaviour
     {
         state ="chasing";
         //if there is two and more bot chase you start to escape, so the bots don't all stack together
+        
+        if (chaseTarget == null)
+        {
+            int chaseIndex = Random.Range(0, searchResults.allHitObjectsWithRequiredTag.Count);
+            chaseTarget = searchResults.allHitObjectsWithRequiredTag[chaseIndex].gameObject;
+            if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
+            {
+                // notice chase target that i am chase you
+                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
+
+            }
+        }
+        // change chase target every 5 sec
+        else if (timer >= 8)
+        {
+            timer = 0;
+            if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
+            {
+                // notice chase target that i am not chasing anymore you
+                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Remove(this.gameObject);
+            }
+            int chaseIndex = Random.Range(0, searchResults.allHitObjectsWithRequiredTag.Count);
+            chaseTarget = searchResults.allHitObjectsWithRequiredTag[chaseIndex].gameObject;
+            if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
+            {
+                // notice chase target that i am chase you
+                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
+            }
+        }
         if (chaseYouGameObject.Count >= 2)
         {
             this.stateMachine.changeState(new Escape(this.gameObject, this.calledFromEscape));
@@ -106,40 +137,21 @@ public class Bot : MonoBehaviour
             return;
         }
         timer += Time.deltaTime;
-        if (chaseTarget == null)
-        {
-            int chaseIndex = Random.Range(0, searchResults.allHitObjectsWithRequiredTag.Count);
-            chaseTarget = searchResults.allHitObjectsWithRequiredTag[chaseIndex].gameObject;
-            if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
-            {
-                // notice chase target that i am chase you
-                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
-
-            }
-        }
-        // change chase target every 5 sec
-        else if (timer >= 5)
-        {
-            timer = 0;
-            if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
-            {
-                // notice chase target that i am not chasing anymore you
-                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Remove(this.gameObject);
-            }
-            int chaseIndex = Random.Range(0, searchResults.allHitObjectsWithRequiredTag.Count);
-            chaseTarget = searchResults.allHitObjectsWithRequiredTag[chaseIndex].gameObject;
-            if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
-            {
-                // notice chase target that i am chase you
-                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
-            }
-        }
     }
 
     public void calledFromEscape(Vector3 direction)
     {
         state="escaping";
         //if there is not bot chase you change state from escape to chase
+        // if(navMeshAgent.enaled!=false){
+
+        // }
+        if(navMeshAgent.enabled == false){
+            stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
+            chaseTarget = null;
+
+            return;
+        }
         if (direction.y == -1 && navMeshAgent.enabled != false)
         {
             stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
@@ -147,31 +159,31 @@ public class Bot : MonoBehaviour
 
             return;
         }
-        // if the escape destination is off the map change direction
-        if (transform.position.z <= 10 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z + 20));
+        // // if the escape destination is off the map change direction
+        // if (transform.position.z <= 10 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z + 20));
 
-            return;
-        }
-        if (transform.position.z >= 40 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z - 20));
+        //     return;
+        // }
+        // if (transform.position.z >= 40 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z - 20));
 
-            return;
-        }
-        if (transform.position.x <= 10 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(direction.x + 20, direction.y, direction.z + 20));
+        //     return;
+        // }
+        // if (transform.position.x <= 10 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(direction.x + 20, direction.y, direction.z + 20));
 
-            return;
-        }
-        if (transform.position.x >= 40 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(-direction.x - 20, direction.y, direction.z - 20));
+        //     return;
+        // }
+        // if (transform.position.x >= 40 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(-direction.x - 20, direction.y, direction.z - 20));
 
-            return;
-        }
+        //     return;
+        // }
         if(navMeshAgent.enabled != false)
         {
             navMeshAgent.SetDestination(direction);
@@ -196,10 +208,29 @@ public class Bot : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
 
-        if (collision.collider.CompareTag("TeamA") || collision.collider.CompareTag("TeamB"))
+        if(this.tag == "TeamA" && collision.gameObject.tag == "TeamA")
         {
-            //GetComponent<NavMeshAgent>().enabled = false;
-            //collisonTime = 0;
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * friendlyForceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+        }
+        if (this.tag == "TeamB" && collision.gameObject.tag == "TeamB")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * friendlyForceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+        }
+        if (this.tag == "TeamA" && collision.gameObject.tag == "TeamB")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+        }
+        if (this.tag == "TeamB" && collision.gameObject.tag == "TeamA")
+        {
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);

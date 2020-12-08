@@ -67,14 +67,18 @@ public class TorusMovement : MonoBehaviour
         if (collision.gameObject.tag == "TeamA" || collision.gameObject.tag == "TeamB")
         {
             collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(15f, transform.position, 15f, 0, ForceMode.Impulse);
-            if (collision.gameObject.GetComponent<CarController>() != null)
-            {
-                collision.gameObject.GetComponent<CarController>().setIsInMotionOfForce(true);
-            }
-            else if (collision.gameObject.GetComponent<Bot>() != null)
-            {
-                collision.gameObject.GetComponent<Bot>().setIsInMotionOfForce(true);
-            }
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<CarController>() != null)
+        {
+            collision.gameObject.GetComponent<CarController>().setIsInMotionOfForce(true);
+        }
+        else if (collision.gameObject.GetComponent<Bot>() != null)
+        {
+            collision.gameObject.GetComponent<Bot>().setIsInMotionOfForce(true);
         }
     }
 }
