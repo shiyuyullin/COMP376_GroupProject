@@ -793,7 +793,7 @@ MonoBehaviour:
     m_Bits: 256
   viewrange: 300
   tagToLookFor: TeamB
-  forceMagnitude: 4.5
+  forceMagnitude: 3.5
   friendlyForceMagnitude: 1.5
   recoil: 1.5
   chaseTarget: {fileID: 0}
