@@ -15,7 +15,7 @@ public class GameEngine : MonoBehaviour
     [SerializeField] private GameObject fallPlat;
     [SerializeField] private GameObject itemPrefab;
     float spawnTime = 5f;
-    float timer = 0;
+    float itemTimer = 0;
     int totalItem = 3;
     int createdItem = 0;
     private GameObject fallPlat1;
@@ -89,11 +89,11 @@ public class GameEngine : MonoBehaviour
         }
 
         //items will appear every 20 seconds, and will be avaliable for 15 seconds.
-        timer += Time.deltaTime;
-        if(timer >= 35.0f)
+        itemTimer += Time.deltaTime;
+        if(itemTimer >= 35.0f)
         {
             spawnItem();
-            timer = 0.0f;
+            itemTimer = 0.0f;
         }
         
         if (fallPlat1 == null && spawnFallPlat)
