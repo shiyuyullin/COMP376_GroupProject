@@ -14,8 +14,13 @@ public class GameEngine : MonoBehaviour
     [SerializeField]
     GameObject itemPrefab;
     float spawnTime = 5f;
+<<<<<<< Updated upstream
     float timer = 0;
     int totalItem = 1;
+=======
+    float itemTimer = 0;
+    int totalItem = 3;
+>>>>>>> Stashed changes
     int createdItem = 0;
 
     
@@ -41,11 +46,36 @@ public class GameEngine : MonoBehaviour
             Time.timeScale = 1;
         }
 
+<<<<<<< Updated upstream
         //item appear
         timer += Time.deltaTime;
         if (createdItem < totalItem)
         {
             if (timer > spawnTime)
+=======
+        //items will appear every 20 seconds, and will be avaliable for 15 seconds.
+        itemTimer += Time.deltaTime;
+        if(itemTimer >= 35.0f)
+        {
+            spawnItem();
+            itemTimer = 0.0f;
+        }
+        
+        if (fallPlat1 == null && spawnFallPlat)
+        {
+            fallPlatRespawnTimer += Time.deltaTime;
+            if (fallPlatRespawnTimer >= 1.5f)
+            {
+                fallPlat1 = Instantiate(fallPlat, new Vector3(-42.34f, 0.858f, -12.856f), Quaternion.Euler(0, 42.793f, 0));
+                fallPlatRespawnTimer = 0.0f;
+
+            }
+        }
+        if (fallPlat2 == null && spawnFallPlat)
+        {
+            fallPlatRespawnTimer += Time.deltaTime;
+            if (fallPlatRespawnTimer >= 1.5f)
+>>>>>>> Stashed changes
             {
                 spawnItem();
                 createdItem ++;
