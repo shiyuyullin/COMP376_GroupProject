@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameEngine : MonoBehaviour
 {
     [SerializeField] private GameObject mainPlayer; // 1
     [SerializeField] private GameObject enemyBots; // 3
     [SerializeField] private GameObject friendlyBots; // 2
-
+    [SerializeField] private GameObject pauseMenu;
 
     //private float timer;
     [SerializeField] private GameObject fallPlat;
@@ -26,10 +27,13 @@ public class GameEngine : MonoBehaviour
     //Map-Sh respawn positions
     GameObject[] shRespawnPositions;
     string sceneName;
+    private bool pause;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Time.timeScale = 0;
+        pauseMenu.SetActive(false);
         Scene currentScene = SceneManager.GetActiveScene();
         sceneName = currentScene.name;
         
@@ -43,24 +47,18 @@ public class GameEngine : MonoBehaviour
             GameObject friendlyBot2 = Instantiate(friendlyBots, respawns[3].transform.position, Quaternion.identity);
         }
 
-        //GameObject enemyBot1 = Instantiate(enemyBots, new Vector3(13.16f, 0.0f, 4.935f),Quaternion.identity);
-        //GameObject enemyBot2 = Instantiate(enemyBots, new Vector3(18.1f, 0.0f, -11.1f), Quaternion.identity);
-        //GameObject enemyBot3 = Instantiate(enemyBots, new Vector3(18.1f, 0.0f, 23.1f), Quaternion.identity);
-        //GameObject friendlyBot1 = Instantiate(friendlyBots, new Vector3(-18.7f, 0.0f, -10), Quaternion.identity);
-        //GameObject friendlyBot2 = Instantiate(friendlyBots, new Vector3(-18.7f, 0.0f, 28.7f), Quaternion.identity);
-        Time.timeScale = 0;
         if(sceneName == "Map-Sh")
         {
             fallPlat1 = Instantiate(fallPlat, new Vector3(-42.34f, 0.858f, -12.856f), Quaternion.Euler(0, 42.793f, 0));
             fallPlat2 = Instantiate(fallPlat, new Vector3(-44.45f, 0.858f, -10.92f), Quaternion.Euler(0, 42.793f, 0));
             spawnFallPlat = true;
             shRespawnPositions = GameObject.FindGameObjectsWithTag("Respawn");
-            //GameObject friendlyBot1 = Instantiate(friendlyBots, shRespawnPositions[0].transform.position, Quaternion.identity);
+            GameObject friendlyBot1 = Instantiate(friendlyBots, shRespawnPositions[0].transform.position, Quaternion.identity);
             //GameObject friendlyBot2 = Instantiate(friendlyBots, shRespawnPositions[5].transform.position, Quaternion.identity);
             //GameObject friendlyBot3 = Instantiate(friendlyBots, shRespawnPositions[6].transform.position, Quaternion.identity);
-            //GameObject enemyBot1 = Instantiate(enemyBots, shRespawnPositions[3].transform.position, Quaternion.identity);
-            //GameObject enemyBot2 = Instantiate(enemyBots, shRespawnPositions[4].transform.position, Quaternion.identity);
-           // GameObject enemyBot3 = Instantiate(enemyBots, shRespawnPositions[3].transform.position, Quaternion.identity);
+            GameObject enemyBot1 = Instantiate(enemyBots, shRespawnPositions[3].transform.position, Quaternion.identity);
+            GameObject enemyBot2 = Instantiate(enemyBots, shRespawnPositions[4].transform.position, Quaternion.identity);
+            //GameObject enemyBot3 = Instantiate(enemyBots, shRespawnPositions[3].transform.position, Quaternion.identity);
             //GameObject enemyBot4 = Instantiate(enemyBots, shRespawnPositions[4].transform.position, Quaternion.identity);
         }
         
@@ -71,7 +69,23 @@ public class GameEngine : MonoBehaviour
     {
         if (Time.realtimeSinceStartup >= 5)
         {
-            Time.timeScale = 1;
+            if (!Input.GetKeyDown(KeyCode.Escape) && !pause)
+            { 
+                Time.timeScale = 1;
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape) && !pause)
+            {
+                Time.timeScale = 0.0f;
+                pauseMenu.SetActive(true);
+                pause = true;
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape) && pause)
+            {
+                Time.timeScale = 1.0f;
+                pauseMenu.SetActive(false);
+                pause = false;
+            }
         }
 
         //items will appear every 20 seconds, and will be avaliable for 15 seconds.
@@ -124,5 +138,11 @@ public class GameEngine : MonoBehaviour
             GameObject iceCream3 = Instantiate(itemPrefab, position3, itemPrefab.transform.rotation);
         }
 
+    }
+
+    public void quitToStartMenu()
+    {
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(0);
     }
 }

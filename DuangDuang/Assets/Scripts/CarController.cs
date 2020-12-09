@@ -33,7 +33,12 @@ public class CarController : MonoBehaviour
     public ProgressBar progressBar;
     bool barStart = false;
     private bool grounded;
+    private AudioSource sound;
 
+    private void Start()
+    {
+        sound = this.GetComponent<AudioSource>();
+    }
 
     void Update()
     {
@@ -90,7 +95,10 @@ public class CarController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground") { }
 
-        if (collision.gameObject.tag == "Obstacle"){ }
+        if (collision.gameObject.tag == "Obstacles")
+        {
+            AudioSource.PlayClipAtPoint(sound.clip, this.transform.position);
+        }
         
         if(collision.gameObject.tag == "TeamA")
         {
@@ -99,6 +107,7 @@ public class CarController : MonoBehaviour
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * friendlyForceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
             this.InMotionOfForce = true;
+            AudioSource.PlayClipAtPoint(sound.clip, this.transform.position);
         }
 
         if (collision.gameObject.tag == "TeamB")
@@ -107,6 +116,7 @@ public class CarController : MonoBehaviour
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
             this.InMotionOfForce = true;
+            AudioSource.PlayClipAtPoint(sound.clip, this.transform.position);
         }
     }
 
