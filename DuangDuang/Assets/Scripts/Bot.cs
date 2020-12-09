@@ -7,11 +7,12 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Bot : MonoBehaviour
 {
-    private StateMachine stateMachine = new StateMachine();
+    public StateMachine stateMachine = new StateMachine();
     [SerializeField] private LayerMask TargetItemLayer;
     [SerializeField] private float viewrange;
     [SerializeField] private string tagToLookFor;
     [SerializeField] float forceMagnitude;
+    [SerializeField] float friendlyForceMagnitude;
     [SerializeField] float recoil;
     [SerializeField] public GameObject chaseTarget;
     //just to see in the unity
@@ -26,17 +27,18 @@ public class Bot : MonoBehaviour
     //This is just use for keeping a time, such that after x second the navMeshAgent is re-enabled.
     private float edgeDetectTimer;
     private bool isOnThePlane;
-
+    LayerMask itemLayer;
     //item
     [SerializeField] float itmeDuration;
     [SerializeField] float speedChangeRatio;
     [SerializeField] float largeSizeChangeRatio;
     [SerializeField] float smallSizeChangeRatio;
     float durationTimer;
+    private AudioSource sound;
 
     private void Start()
     {
-
+        itemLayer = LayerMask.GetMask("Item");
         chaseYouGameObject = new List<GameObject>();
         timer = 0;
         navMeshAgent = this.GetComponent<NavMeshAgent>();
@@ -45,7 +47,7 @@ public class Bot : MonoBehaviour
         //the default state is to chase item
         this.stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
         state = "chase";
-
+        sound = this.GetComponent<AudioSource>();
         //items
         //duration = gameObject.GetComponent<CarController>().getDuration();
         //speedChangeRatio = gameObject.GetComponent<CarController>().getSpeedChangeRatio();
@@ -60,8 +62,9 @@ public class Bot : MonoBehaviour
         // if the navMeshAgent is disabled, which can only be disabled by BotFallDetect.cs
         if(this.navMeshAgent.enabled == false)
         {
+            
             edgeDetectTimer += Time.deltaTime;
-            if(edgeDetectTimer >= 3.0 && isOnThePlane)
+            if(edgeDetectTimer >= 1.0f && isOnThePlane)
             {
                 this.navMeshAgent.enabled = true;
                 edgeDetectTimer = 0.0f;
@@ -88,17 +91,9 @@ public class Bot : MonoBehaviour
 
     public void targetFound(SearchResults searchResults)
     {
+        state ="chasing";
         //if there is two and more bot chase you start to escape, so the bots don't all stack together
-        if (chaseYouGameObject.Count >= 2)
-        {
-            this.stateMachine.changeState(new Escape(this.gameObject, this.calledFromEscape));
-            chaseTarget = null;
-            state = "escape";
-
-            return;
-        }
-
-        timer += Time.deltaTime;
+        
         if (chaseTarget == null)
         {
             int chaseIndex = Random.Range(0, searchResults.allHitObjectsWithRequiredTag.Count);
@@ -111,7 +106,7 @@ public class Bot : MonoBehaviour
             }
         }
         // change chase target every 5 sec
-        else if (timer >= 5)
+        else if (timer >= 8)
         {
             timer = 0;
             if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
@@ -127,11 +122,37 @@ public class Bot : MonoBehaviour
                 chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
             }
         }
+        if (chaseYouGameObject.Count >= 2)
+        {
+            this.stateMachine.changeState(new Escape(this.gameObject, this.calledFromEscape));
+            chaseTarget = null;
+            
+
+            return;
+        }
+        var hitObjects = Physics.OverlapSphere(transform.position, 10, itemLayer);
+        if(hitObjects.Length>0){
+            this.stateMachine.changeState(new SearchItem(this.gameObject,this.searchItem));
+            chaseTarget = null;
+            
+            return;
+        }
+        timer += Time.deltaTime;
     }
 
     public void calledFromEscape(Vector3 direction)
     {
+        state="escaping";
         //if there is not bot chase you change state from escape to chase
+        // if(navMeshAgent.enaled!=false){
+
+        // }
+        if(navMeshAgent.enabled == false){
+            stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
+            chaseTarget = null;
+
+            return;
+        }
         if (direction.y == -1 && navMeshAgent.enabled != false)
         {
             stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
@@ -139,31 +160,31 @@ public class Bot : MonoBehaviour
 
             return;
         }
-        // if the escape destination is off the map change direction
-        if (transform.position.z <= 10 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z + 20));
+        // // if the escape destination is off the map change direction
+        // if (transform.position.z <= 10 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z + 20));
 
-            return;
-        }
-        if (transform.position.z >= 40 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z - 20));
+        //     return;
+        // }
+        // if (transform.position.z >= 40 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(direction.x, direction.y, direction.z - 20));
 
-            return;
-        }
-        if (transform.position.x <= 10 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(direction.x + 20, direction.y, direction.z + 20));
+        //     return;
+        // }
+        // if (transform.position.x <= 10 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(direction.x + 20, direction.y, direction.z + 20));
 
-            return;
-        }
-        if (transform.position.x >= 40 && navMeshAgent.enabled != false)
-        {
-            navMeshAgent.SetDestination(new Vector3(-direction.x - 20, direction.y, direction.z - 20));
+        //     return;
+        // }
+        // if (transform.position.x >= 40 && navMeshAgent.enabled != false)
+        // {
+        //     navMeshAgent.SetDestination(new Vector3(-direction.x - 20, direction.y, direction.z - 20));
 
-            return;
-        }
+        //     return;
+        // }
         if(navMeshAgent.enabled != false)
         {
             navMeshAgent.SetDestination(direction);
@@ -171,18 +192,59 @@ public class Bot : MonoBehaviour
         
 
     }
+
+    //search item
+    public void searchItem(Vector3 position_){
+        state ="findItem";
+        if(position_.y==-1){
+            stateMachine.changeState(new SearchForTarget(this.TargetItemLayer, this.gameObject, this.viewrange, this.tagToLookFor, this.targetFound));
+            return;
+        }
+        if(navMeshAgent.enabled != false){
+        navMeshAgent.SetDestination(position_);}
+    }
+
+
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
+        if (collision.gameObject.tag == "Ground") { }
 
-        if (collision.collider.CompareTag("TeamA") || collision.collider.CompareTag("TeamB"))
+        if(collision.gameObject.tag == "Obstacles")
         {
-            //GetComponent<NavMeshAgent>().enabled = false;
-            //collisonTime = 0;
+            AudioSource.PlayClipAtPoint(sound.clip, transform.position);
+        }
+
+        if(this.tag == "TeamA" && collision.gameObject.tag == "TeamA")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * friendlyForceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+            AudioSource.PlayClipAtPoint(sound.clip, transform.position);
+        }
+        if (this.tag == "TeamB" && collision.gameObject.tag == "TeamB")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * friendlyForceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+            AudioSource.PlayClipAtPoint(sound.clip, transform.position);
+        }
+        if (this.tag == "TeamA" && collision.gameObject.tag == "TeamB")
+        {
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
             this.InMotionOfForce = true;
+            AudioSource.PlayClipAtPoint(sound.clip, transform.position);
+        }
+        if (this.tag == "TeamB" && collision.gameObject.tag == "TeamA")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+            AudioSource.PlayClipAtPoint(sound.clip, transform.position);
         }
     }
 
