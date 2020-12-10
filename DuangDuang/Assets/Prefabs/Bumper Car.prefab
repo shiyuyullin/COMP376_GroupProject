@@ -83,6 +83,7 @@ MonoBehaviour:
   largeSizeChangeRatio: 0
   smallSizeChangeRatio: 0
   alphaChangeRatio: 0
+  progressBar: {fileID: 0}
 --- !u!65 &5142876052396582993
 BoxCollider:
   m_ObjectHideFlags: 0
