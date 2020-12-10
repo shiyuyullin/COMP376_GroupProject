@@ -11,6 +11,7 @@ public class CarController : MonoBehaviour
 
     //bumper
     [SerializeField] float forceMagnitude;
+    [SerializeField] float friendlyForceMagnitude;
     [SerializeField] float recoil;
 
     private float horizontal;
@@ -30,26 +31,32 @@ public class CarController : MonoBehaviour
 
     public ProgressBar progressBar;
     bool barStart = false;
+    private bool grounded;
+    private AudioSource sound;
 
+    private void Start()
+    {
+        sound = this.GetComponent<AudioSource>();
+    }
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-            wPressed = true;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            sPressed = true;
-        }
-        
         if (InMotionOfForce)
         {
-            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude <= 0.1)
+            if (gameObject.GetComponent<Rigidbody>().velocity.magnitude <= 0.01)
             {
                 InMotionOfForce = false;
             }
         }
+        if (Input.GetKey(KeyCode.W) && !InMotionOfForce)
+        {
+            wPressed = true;
+        }
+        if (Input.GetKey(KeyCode.S) && !InMotionOfForce)
+        {
+            sPressed = true;
+        }
+        
         Move();
 
         //if (barStart)
@@ -63,13 +70,12 @@ public class CarController : MonoBehaviour
     {
         if (!InMotionOfForce)
         {
-            if (wPressed)
+            if (wPressed && grounded)
             {
                 gameObject.GetComponent<Rigidbody>().velocity = -transform.right * mSpeed;
-
                 wPressed = false;
             }
-            if (sPressed)
+            if (sPressed && grounded)
             {
                 gameObject.GetComponent<Rigidbody>().velocity = transform.right * mSpeed;
                 sPressed = false;
@@ -86,14 +92,45 @@ public class CarController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Obstacles") { }
+        if (collision.gameObject.tag == "Ground") { }
 
-        if (collision.gameObject.tag == "TeamA" || collision.gameObject.tag == "TeamB")
+        if (collision.gameObject.tag == "Obstacles")
+        {
+            AudioSource.PlayClipAtPoint(sound.clip, this.transform.position);
+        }
+        
+        if(collision.gameObject.tag == "TeamA")
+        {
+            Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * friendlyForceMagnitude, ForceMode.Impulse);
+            gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
+            this.InMotionOfForce = true;
+            AudioSource.PlayClipAtPoint(sound.clip, this.transform.position);
+        }
+
+        if (collision.gameObject.tag == "TeamB")
         {
             Vector3 forceDirection = collision.gameObject.transform.position - gameObject.transform.position;
             collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
             gameObject.GetComponent<Rigidbody>().AddForce(-forceDirection * recoil, ForceMode.Impulse);
             this.InMotionOfForce = true;
+            AudioSource.PlayClipAtPoint(sound.clip, this.transform.position);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            grounded = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            grounded = false;
         }
     }
 

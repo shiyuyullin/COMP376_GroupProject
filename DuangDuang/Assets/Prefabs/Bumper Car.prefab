@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5142876052396583007}
   - component: {fileID: 5142876052396582992}
   - component: {fileID: 5142876052396582993}
+  - component: {fileID: 5142876053694366873}
   m_Layer: 8
   m_Name: Bumper Car
   m_TagString: TeamA
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 5142876052396582994}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 9.166, y: 0, z: 7.426}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 4.5, y: 4.5, z: 4.5}
   m_Children:
   - {fileID: 5142876053889136793}
   - {fileID: 5142876052670506834}
@@ -61,7 +62,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 3
+  m_CollisionDetection: 0
 --- !u!114 &5142876052396582992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,15 +75,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61d7044b4a3ccf8439cfe06af1a897b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mSpeed: 6
+  mSpeed: 7
   mAngularSpeed: 2
-  forceMagnitude: 3
-  recoil: 1
-  itemDuration: 0
-  speedChangeRatio: 0
-  largeSizeChangeRatio: 0
-  smallSizeChangeRatio: 0
-  alphaChangeRatio: 0
+  forceMagnitude: 4.5
+  friendlyForceMagnitude: 1.5
+  recoil: 1.5
+  itemDuration: 10
+  speedChangeRatio: 1.5
+  largeSizeChangeRatio: 1.5
+  smallSizeChangeRatio: 0.5
+  alphaChangeRatio: 0.1
   progressBar: {fileID: 0}
 --- !u!65 &5142876052396582993
 BoxCollider:
@@ -95,8 +97,104 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.48, y: 0.2, z: 0.48}
-  m_Center: {x: 0, y: 0.1, z: 0}
+  m_Size: {x: 0.48, y: 0.23, z: 0.48}
+  m_Center: {x: 0, y: 0.125, z: 0}
+--- !u!82 &5142876053694366873
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142876052396582994}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 376808a4733643e4d855d42c8fc214aa, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5142876052398183839
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,7 +867,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5142876054187796151}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.011, y: 1.2, z: 0.049}
+  m_LocalPosition: {x: 1.011, y: 0.83, z: 0.049}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5142876052396583006}
