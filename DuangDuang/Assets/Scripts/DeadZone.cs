@@ -27,7 +27,12 @@ public class DeadZone : MonoBehaviour
             respawns = GameObject.FindGameObjectsWithTag("Respawn");
         }
 
-        if(sceneName =="Map-L"){
+        if (sceneName == "Map-Zi")
+        {
+            respawns = GameObject.FindGameObjectsWithTag("Respawn");
+        }
+
+        if (sceneName =="Map-L"){
           respawns = GameObject.FindGameObjectsWithTag("Respawn");
         }
 
@@ -82,7 +87,20 @@ public class DeadZone : MonoBehaviour
             }
         }
 
-        if(sceneName =="Map-L"){
+        if (sceneName == "Map-Zi")
+        {
+            if (obj.tag == "TeamA")
+            {
+                obj.transform.position = respawns[0].transform.position;
+            }
+            if (obj.tag == "TeamB")
+            {
+                obj.transform.position = respawns[3].transform.position;
+
+            }
+        }
+
+        if (sceneName =="Map-L"){
             if(obj.tag == "TeamA")
             {
                 obj.transform.position = respawns[0].transform.position;

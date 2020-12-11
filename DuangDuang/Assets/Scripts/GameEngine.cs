@@ -91,6 +91,16 @@ public class GameEngine : MonoBehaviour
             //GameObject enemyBot4 = Instantiate(enemyBots, shRespawnPositions[4].transform.position, Quaternion.identity);
         }
 
+        if (sceneName == "Map-Zi")
+        {
+            //fallPlat1 = Instantiate(fallPlat, new Vector3(-42.34f, 0.858f, -12.856f), Quaternion.Euler(0, 42.793f, 0));
+            //fallPlat2 = Instantiate(fallPlat, new Vector3(-44.45f, 0.858f, -10.92f), Quaternion.Euler(0, 42.793f, 0));
+            //spawnFallPlat = true;
+            shRespawnPositions = GameObject.FindGameObjectsWithTag("Respawn");
+            GameObject enemyBot1 = Instantiate(enemyBots, shRespawnPositions[3].transform.position, Quaternion.identity);
+            GameObject enemyBot2 = Instantiate(enemyBots, shRespawnPositions[4].transform.position, Quaternion.identity);
+        }
+
         if (sceneName == "Map-YZ")
         {
             respawns = GameObject.FindGameObjectsWithTag("Respawn");
