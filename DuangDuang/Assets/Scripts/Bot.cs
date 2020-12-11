@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 [RequireComponent(typeof(NavMeshAgent))]
 public class Bot : MonoBehaviour
 {
@@ -96,11 +97,22 @@ public class Bot : MonoBehaviour
         
         if (chaseTarget == null)
         {
-            int chaseIndex = Random.Range(0, searchResults.allHitObjectsWithRequiredTag.Count);
-            chaseTarget = searchResults.allHitObjectsWithRequiredTag[chaseIndex].gameObject;
+            int chaseIndex;
+            while(true){
+                try{
+                chaseIndex= Random.Range(0, searchResults.allHitObjectsWithRequiredTag.Count);
+                chaseTarget = searchResults.allHitObjectsWithRequiredTag[chaseIndex].gameObject;
+                }
+                catch(System.ArgumentOutOfRangeException e){
+                    continue;
+                }
+                break;
+            }
+
             if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
             {
                 // notice chase target that i am chase you
+                
                 chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
 
             }
@@ -114,28 +126,34 @@ public class Bot : MonoBehaviour
                 // notice chase target that i am not chasing anymore you
                 chaseTarget.GetComponent<Bot>().chaseYouGameObject.Remove(this.gameObject);
             }
-            int chaseIndex = Random.Range(0, searchResults.allHitObjectsWithRequiredTag.Count);
-            chaseTarget = searchResults.allHitObjectsWithRequiredTag[chaseIndex].gameObject;
-            if (chaseTarget.name != "Bumper Car" && chaseTarget != null)
-            {
-                // notice chase target that i am chase you
-                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Add(this.gameObject);
-            }
+            chaseTarget=null;
+            return;
         }
         if (chaseYouGameObject.Count >= 2)
         {
-            this.stateMachine.changeState(new Escape(this.gameObject, this.calledFromEscape));
-            chaseTarget = null;
             
-
+            
+            if (chaseTarget != null&&chaseTarget.name != "Bumper Car")
+            {
+                // notice chase target that i am not chasing anymore you
+                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Remove(this.gameObject);
+            }
+            chaseTarget = null;
+            this.stateMachine.changeState(new Escape(this.gameObject, this.calledFromEscape));
             return;
         }
         var hitObjects = Physics.OverlapSphere(transform.position, 10, itemLayer);
         if(hitObjects.Length>0){
+            
+            if (chaseTarget != null&&chaseTarget.name != "Bumper Car")
+            {
+                // notice chase target that i am not chasing anymore you
+                chaseTarget.GetComponent<Bot>().chaseYouGameObject.Remove(this.gameObject);
+            }
             this.stateMachine.changeState(new SearchItem(this.gameObject,this.searchItem));
             chaseTarget = null;
-            
             return;
+
         }
         timer += Time.deltaTime;
     }
@@ -187,7 +205,7 @@ public class Bot : MonoBehaviour
         // }
         if(navMeshAgent.enabled != false)
         {
-            navMeshAgent.SetDestination(direction);
+            navMeshAgent.SetDestination(direction+new Vector3(8,0,8));
         }
         
 

@@ -22,11 +22,14 @@ public class GameEngine : MonoBehaviour
     private GameObject fallPlat2;
     private float fallPlatRespawnTimer;
     private bool spawnFallPlat;
-    //Map-J respawns
+
     GameObject[] respawns;
+    GameObject[] itemRespawns;
+
     //Map-Sh respawn positions
     GameObject[] shRespawnPositions;
     string sceneName;
+   
     private bool pause;
 
     // Start is called before the first frame update
@@ -35,6 +38,7 @@ public class GameEngine : MonoBehaviour
         //Time.timeScale = 0;
         pauseMenu.SetActive(false);
         Scene currentScene = SceneManager.GetActiveScene();
+        
         sceneName = currentScene.name;
         
         if (sceneName == "Map-J")
@@ -45,6 +49,31 @@ public class GameEngine : MonoBehaviour
             GameObject enemyBot3 = Instantiate(enemyBots, respawns[4].transform.position, Quaternion.identity);
             GameObject friendlyBot1 = Instantiate(friendlyBots, respawns[1].transform.position, Quaternion.identity);
             GameObject friendlyBot2 = Instantiate(friendlyBots, respawns[3].transform.position, Quaternion.identity);
+        }
+        if(sceneName =="Map-L"){
+            float temp;
+            float x;
+            float y;
+            float z;
+            for(int i =1; i<6;i++){
+                temp=i/6.0f*2*Mathf.PI;
+            
+                x=22*Mathf.Cos(temp);
+                z=22*Mathf.Sin(temp);
+                y=1;
+               
+                if(i==1||i==2){
+                    Instantiate(friendlyBots,new Vector3(x,y,z),Quaternion.identity);
+                }
+                else {
+                    Instantiate(enemyBots,new Vector3(x,y,z),Quaternion.identity);
+                }
+
+            }
+            
+            
+
+            
         }
 
         if(sceneName == "Map-Sh")
@@ -61,8 +90,19 @@ public class GameEngine : MonoBehaviour
             //GameObject enemyBot3 = Instantiate(enemyBots, shRespawnPositions[3].transform.position, Quaternion.identity);
             //GameObject enemyBot4 = Instantiate(enemyBots, shRespawnPositions[4].transform.position, Quaternion.identity);
         }
-        
+
+        if (sceneName == "Map-YZ")
+        {
+            respawns = GameObject.FindGameObjectsWithTag("Respawn");
+            GameObject enemyBot1 = Instantiate(enemyBots, respawns[0].transform.position, Quaternion.identity);
+            GameObject enemyBot2 = Instantiate(enemyBots, respawns[2].transform.position, Quaternion.identity);
+            GameObject enemyBot3 = Instantiate(enemyBots, respawns[4].transform.position, Quaternion.identity);
+            GameObject friendlyBot1 = Instantiate(friendlyBots, respawns[1].transform.position, Quaternion.identity);
+            GameObject friendlyBot2 = Instantiate(friendlyBots, respawns[3].transform.position, Quaternion.identity);
+        }
+
     }
+
 
     // Update is called once per frame
     void Update()
@@ -95,6 +135,11 @@ public class GameEngine : MonoBehaviour
             spawnItem();
             itemTimer = 0.0f;
         }
+    
+
+        //item appear
+        
+        if (createdItem < totalItem)
         
         if (fallPlat1 == null && spawnFallPlat)
         {
@@ -138,6 +183,35 @@ public class GameEngine : MonoBehaviour
             GameObject iceCream3 = Instantiate(itemPrefab, position3, itemPrefab.transform.rotation);
         }
 
+        if(sceneName =="Map-L"){
+
+            int t = Random.Range(0,180);
+            float x=7*Mathf.Cos(t);
+            float z=5*Mathf.Sin(t);
+            float y=0;
+            position = new Vector3(x,y,z);
+            Instantiate(itemPrefab, position, itemPrefab.transform.rotation);
+            t= Random.Range(0,180);
+            x=7*Mathf.Cos(t);
+            z=5*Mathf.Sin(t);
+            position = new Vector3(x,y,z);
+            Instantiate(itemPrefab, position, itemPrefab.transform.rotation);
+
+        }
+        
+        
+
+        if (sceneName == "Map-YZ")
+        {
+            itemRespawns = GameObject.FindGameObjectsWithTag("itemPosition");
+            
+            GameObject iceCream1 = Instantiate(itemPrefab, itemRespawns[Random.Range(0, itemRespawns.Length)].transform.position, itemPrefab.transform.rotation);
+            GameObject iceCream2 = Instantiate(itemPrefab, itemRespawns[Random.Range(0, itemRespawns.Length)].transform.position, itemPrefab.transform.rotation);
+            GameObject iceCream3 = Instantiate(itemPrefab, itemRespawns[Random.Range(0, itemRespawns.Length)].transform.position, itemPrefab.transform.rotation);
+        }
+       //TODO rotate slowly
+        Debug.Log("Item spawn!");
+
     }
 
     public void quitToStartMenu()
@@ -145,4 +219,5 @@ public class GameEngine : MonoBehaviour
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(0);
     }
+    
 }

@@ -12,7 +12,7 @@ public class Timer : MonoBehaviour
 
     void Start()
     {
-        startTime = 10f;
+        startTime = 180f;
         timerRunning = true;
         time = startTime;
         timer.text = "Time: " + time;

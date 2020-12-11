@@ -187,6 +187,14 @@ public class CarController : MonoBehaviour
             durationTimer = 0;
             //barStart = false;
         }
+        if (other.gameObject.name == "Transfer1")
+        {
+            transform.position = GameObject.Find("Transfer2").transform.position + new Vector3(0f, 0f, -5f);
+        }
+        if (other.gameObject.name == "Transfer2")
+        {
+            transform.position = GameObject.Find("Transfer1").transform.position + new Vector3(0f, 0f, 5f);
+        }
     }
 
     IEnumerator changeSpeed()
