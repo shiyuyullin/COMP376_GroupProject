@@ -5907,7 +5907,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c7a1616994c5f45cc8c1b433c0f4d335, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.04
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -6607,5 +6607,9 @@ PrefabInstance:
       propertyPath: cameraLocation
       value: 
       objectReference: {fileID: 1564203424}
+    - target: {fileID: 8194158676106188126, guid: d642c808fb92ca541b7b5f03b167f7a7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d642c808fb92ca541b7b5f03b167f7a7, type: 3}
