@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public void ShowEndText()
     {
         endGame.SetActive(true);
-        //SceneManager.LoadScene(1);
+        SceneManager.LoadScene(1);
     }
 
     public void DisappearStartText()
