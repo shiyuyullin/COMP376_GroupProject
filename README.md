@@ -12,4 +12,7 @@ Final report
 https://docs.google.com/document/d/1YhAixkMt6Uipn0lZF_SXYZRuKeImhvLKJDuBIZwJP08/edit?usp=sharing
 
 Github Link  
-https://github.com/shiyuyullin/COMP376_GroupProject
+https://github.com/shiyuyullin/COMP376_GroupProject  
+
+Detailed team meeting logs and changes made after presentations are at section 12&13 of the final report!  
+
