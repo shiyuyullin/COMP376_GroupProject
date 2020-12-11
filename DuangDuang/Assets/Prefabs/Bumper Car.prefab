@@ -78,7 +78,7 @@ MonoBehaviour:
   mSpeed: 7
   mAngularSpeed: 2
   forceMagnitude: 4.5
-  friendlyForceMagnitude: 1.5
+  friendlyForceMagnitude: 0.5
   recoil: 1.5
   itemDuration: 10
   speedChangeRatio: 1.5

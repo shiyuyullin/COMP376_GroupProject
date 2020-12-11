@@ -795,7 +795,7 @@ MonoBehaviour:
   viewrange: 300
   tagToLookFor: TeamB
   forceMagnitude: 3.5
-  friendlyForceMagnitude: 1.5
+  friendlyForceMagnitude: 0.5
   recoil: 1.5
   chaseTarget: {fileID: 0}
   state: 
@@ -862,7 +862,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
