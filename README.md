@@ -1,4 +1,7 @@
-# COMP376_GroupProject
+# DuangDuang
+
+DuangDuang is a third person bumper car game! playing like Fall Guys meets Mario Cart 8. 
+
 Intermediate presentation PPT link  
 https://docs.google.com/presentation/d/1AkBmEfbH2g12ywS0X8aYYFdhuJCw5mSOsDzzqlK03ww/edit?usp=sharing
 
